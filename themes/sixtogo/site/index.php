@@ -1,8 +1,29 @@
 <?php
 
+use yii\web\View;
+use yii\bootstrap\Modal;
+
+$this->registerJs("$('#openModalAddress').click();", View::POS_READY, 'modalOpen');
+
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
+
+Modal::begin([
+    'header' => '<h2>Modal Prueba</h2>',
+    'id' => 'modalAddress',
+    'size' => 'SIZE_LARGE',
+    'toggleButton' => [
+        'hidden' => 'hidden',
+        'id' => 'openModalAddress',
+        'label' => 'click me',
+        ],
+]);
+
+echo 'Say hello...';
+
+Modal::end();
+
 ?>
 <div class="site-index">
 
