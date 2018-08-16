@@ -1,8 +1,19 @@
 <?php
+
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * -----------------------------------------------------------------------------
+ * Creado Por     | David Alejandro Domínguez Rivera
+ * Fecha Creación | 15/Ago/2018 15:40 
+ * -----------------------------------------------------------------------------
+ * Empresa        | InOutDelivery 
+ * Aplicación     | webfront-yii2
+ * Desarrolladores| David Alejandro Domínguez Rivera                      (DADR)
+ * -----------------------------------------------------------------------------
+ * Historial de modificaciones:
+ * (DADR) 15/Ago/2018 15:40  - 15/Ago/2018 16:40 = Test[success]
+ * -    Se creo el ThemeAsset (basado en el AppAsset), el cual se encargara de 
+ *      gestionar los contenidos de los diferentes temas de la aplicación 
+ *      alojados en la carpeta themes.
  */
 
 namespace app\assets;
@@ -10,15 +21,14 @@ namespace app\assets;
 use yii\web\AssetBundle;
 
 /**
- * Main application asset bundle.
+ * Paquete de assets para los temas de la aplicación.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * @author (DADR) 
+ * @version 1.0
  */
-class AppAsset extends AssetBundle
-{
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+class ThemeAsset extends AssetBundle {
+
+    public $sourcePath = '@app/themes/sixtogo';
     public $css = [
         'css/site.css',
     ];
@@ -28,4 +38,5 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
+
 }
