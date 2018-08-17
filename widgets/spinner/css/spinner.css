@@ -1,0 +1,35 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Creado Por     | David Alejandro Domínguez Rivera
+ * Fecha Creación | 16/Ago/2018 14:55 
+ * -----------------------------------------------------------------------------
+ * Empresa        | InOutDelivery 
+ * Aplicación     | webfront-yii2
+ * Desarrolladores| David Alejandro Domínguez Rivera                      (DADR)
+ * -----------------------------------------------------------------------------
+ * Historial de modificaciones:
+ * (DADR) 16/Ago/2018 14:55  - 16/Ago/2018 14:55 = Test[success]
+ * -    Se creo el ThemeAsset (basado en el AppAsset), el cual se encargara de 
+ *      gestionar los contenidos de los diferentes temas de la aplicación 
+ *      alojados en la carpeta themes.
+ */
+
+.lds-dual-ring{
+    content: " ";
+    display: inline-block;
+    width: 46px;
+    height: 46px;
+    margin: 1px;
+    border-radius: 50%;
+    border: 5px solid #666;
+    border-color: #666 transparent #666 transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

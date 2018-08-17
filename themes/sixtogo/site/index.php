@@ -17,72 +17,121 @@
  * -    Se agrego libreria yii2-google-maps-library para el manejo de GoogleMaps
  *      se cambio el widget de modal a uno propio llamado ModalAddress y se 
  *      implemento el mapa dentro del nuevo modal.
+ * (DADR) 16/Ago/2018 09:35 - 16/Ago/2018 17:20 = No Test
+ * -    Modificar los controles del mapa para que no aparescan los botones de 
+ *      Map Type, Fullscreen y Street View.
  */
-use yii\helpers\VarDumper;
 use yii\web\View;
-use app\widgets\ModalAddress;
-use dosamigos\google\maps\Map;
-use dosamigos\google\maps\LatLng;
-use dosamigos\google\maps\services\GeocodingClient;
-use dosamigos\google\maps\overlays\InfoWindow;
-use dosamigos\google\maps\overlays\Marker;
-
-$this->registerJs("$('#openModalAddress').click();", View::POS_READY, 'modalOpen');
-
-$geocodingClient = new GeocodingClient();
-$teste = $geocodingClient->lookup(
-        [
-            'address' => 'Cl. 147 #7b-37',
-            'region' => 'Bogotá'
-        ]
-);
-$coord = new LatLng(['lat' => $teste->results[0]->geometry->location->lat, 'lng' => $teste->results[0]->geometry->location->lng]);
-$map = new Map([
-    'center' => $coord,
-    'zoom' => 17,
-    'width' => 'calc(100% + 15px)',
-//    'border-radius' => '0 6px 6px 0'
-        ]);
-
-// Lets add a marker now
-$marker = new Marker([
-    'position' => $coord,
-    'title' => 'My Home Town',
-        ]);
-
-// Provide a shared InfoWindow to the marker
-$marker->attachInfoWindow(
-        new InfoWindow([
-    'content' => '<p>This is my super cool content</p>'
-        ])
-);
-
-// Add marker to the map
-$map->addOverlay($marker);
-
-/* @var $this yii\web\View */
+use yii\helpers\Html;
+use yii\helpers\VarDumper;
+use app\widgets\map\Map;
+use app\widgets\modal\Modal;
+use kartik\form\ActiveForm;
 
 $this->title = 'My Yii Application';
 
-ModalAddress::begin([
-//    'closeButton' => false,
-    'header' => '<h2>Modal Prueba</h2>',
-//    'headerOptions' => ['class' => 'address'],
-    'map' => $map->display(),
+Modal::begin([
+    'header' => false,
+    'closeButton' => [
+        'class' => 'close pos-tr'
+    ],
+    'bodyOptions' => [
+        'class' => 'modal-body p-0'
+    ],
+    'footer' => false,
     'id' => 'modalAddress',
     'size' => 'modal-lg',
-    'toggleButton' => [
-        'hidden' => 'hidden',
-        'id' => 'openModalAddress',
-        'label' => 'click me',
-    ],
+    'clientOptions' => [
+        'show' => true
+    ]
 ]);
+?>
+<div class="row m-0">
+    <div class="col-sm-5 py-15">
+        <h3 class="m-0 gotham-medium">Bienvenido a Six To Go</h3>
+        <h5 class="gotham-medium">Por favor escribe tu dirección para validar cobertura</h5>
+        <?php
+        $form = ActiveForm::begin([
+                'id' => 'addressForm',
+                'type' => ActiveForm::TYPE_VERTICAL
+        ]);
 
-// Display the map -finally :)
-//echo $map->display();
-//VarDumper::dump($teste->results[0]->geometry->location->lat);
+//echo Spinner::widget(['width' => '150px', 'height' => '150px', 'border' => '15px']);
+        echo $form->field($model, 'address')
+            ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
+        ?>
+        <div class="col-sm-8 p-0">
+            <?php
+            echo $form->field($model, 'description')
+                ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
+            ?>
+        </div>
+        <div class="col-sm-4 p-0">
+            <?php
+            echo $form->field($model, 'isNewRecord', [
+                'template' => '{beginLabel}{labelTitle}{endLabel}{input}\n{hint}\n{error}\n{endWrapper}'
+            ])->checkbox(['id' => 'chkSave', 'class' => 'checkbox']);
+            ?>
+        </div>
+        <?php
+        echo Html::submitButton('CONTINUAR', ['class' => 'btn submit']);
 
-ModalAddress::end();
+        ActiveForm::end();
+        ?>
+    </div>
+    <div class="col-sm-7 p-0">
+        <?= Map::widget(); ?>
+    </div>
+</div>
+<?php
+Modal::end();
+//Modal::begin([
+//    'header' => '<h3>Bienvenido a Six To Go</h3>'
+//    . '<h5>Por favor escribe tu dirección para validar cobertura</h5>',
+//    'map' => Map::widget(),
+//    'id' => 'modalAddress',
+//    'size' => 'modal-lg',
+//    'toggleButton' => [
+//        'hidden' => 'hidden',
+//        'id' => 'openModalAddress',
+//        'label' => 'click me',
+//    ],
+//]);
+//$form = ActiveForm::begin([
+//            'id' => 'addressForm',
+//            'type' => ActiveForm::TYPE_VERTICAL
+//        ]);
+//
+////echo Spinner::widget(['width' => '150px', 'height' => '150px', 'border' => '15px']);
+//
+?>
+<!--<label>Escribe tu dirección</label>-->
+<?=
+''
+//        $form->field($model, 'address')
+//        ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
+?>
+<!--<label>Datos complementarios</label>-->
+<?=
+''
+//        $form->field($model, 'description')
+//        ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
+//
+?>
+<!--<label>Guardar Dirección</label>-->
+<?=
+''
+//        $form->field($model, 'isNewRecord', [
+//            'template' => '{beginLabel}{labelTitle}{endLabel}{input}\n{hint}\n{error}\n{endWrapper}'
+//        ])
+//        ->checkbox(['id' => 'chkSave', 'class' => 'checkbox'])
+//
+?>
+<?= ''//Html::submitButton('CONTINUAR', ['class' => 'btn submit']) ?>
+<?php
+//ActiveForm::end();
+//
+//Modal::end();
 ?>
 <div class="site-index">
 

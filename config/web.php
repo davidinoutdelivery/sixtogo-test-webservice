@@ -74,17 +74,17 @@ $config = [
                 'baseUrl' => '@web/themes/sixtogo',
             ],
         ],
-        'assetManager' => [
-            'bundles' => [
-                'dosamigos\google\maps\MapAsset' => [
-                    'options' => [
-                        'key' => 'AIzaSyAGygNhTiCiqhrTTCeLamEB6BMswcMnx_A',
-//                        'language' => 'id',
-                        'version' => '3.1.18'
-                    ]
-                ]
-            ]
-        ],
+//        'assetManager' => [
+//            'bundles' => [
+//                'dosamigos\google\maps\MapAsset' => [
+//                    'options' => [
+//                        'key' => 'AIzaSyAGygNhTiCiqhrTTCeLamEB6BMswcMnx_A',
+////                        'language' => 'id',
+//                        'version' => '3.1.18'
+//                    ]
+//                ]
+//            ]
+//        ],
     ],
     'params' => $params,
 ];
