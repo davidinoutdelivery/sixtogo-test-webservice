@@ -37,7 +37,7 @@ $this->registerCss(".btn-back {
 						<div class="alert alert-success">
 							<h5 class="gotham-medium">Exitosa</h5>
 							<p class="gotham-medium">
-								Te hemos enviado un enlace para el cambio de contraseña, por favor revisa la bandeja de entradas de tu correo electrónico <b><?php echo $response['email'];?></b>.
+								Te hemos enviado un enlace para el cambio de contraseña, por favor revisa la bandeja de entrada de tu correo electrónico <b><?php echo $response['email'];?></b>.
 							</p>
 						</div>
 				<?php

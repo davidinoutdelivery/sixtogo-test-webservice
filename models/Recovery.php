@@ -25,7 +25,7 @@
 
 		public function tokenEmailValidate($GET)
 	    {
-	    	# 	EVALUAMOS LA VALIDEZ DEL TOKEN Y EL EMAIL DE URL PARA EL CAMBIO DE CONTRASEÑA
+	    	// 	EVALUAMOS LA VALIDEZ DEL TOKEN Y EL EMAIL DE URL PARA EL CAMBIO DE CONTRASEÑA
 
 	    	$client 	= OrientDb::connection();
 	    	$validate 	= $client->command('select validateEmailToken({email : "'.$GET['email'].'", token : "'.$GET['token'].'"})');
@@ -36,14 +36,15 @@
 
 	    public function passwordUpdate($email,$password)
 	    {
-	    	# 	REALIZAMOS EL CAMBIO DE CONTRASEÑA DEL USUARIO CON LA FUNCION 
-	    	# 	select changePassword({email : "freddy@gmail.com", password : "123"})
+	    	// 	REALIZAMOS EL CAMBIO DE CONTRASEÑA DEL USUARIO CON LA FUNCION 
+	    	// 	select changePassword({username : "freddy@gmail.com", password : "123"})
 
 	    	$username = explode('@', $email);
 	    	$name = $username[0];
 
 	    	$client 	= OrientDb::connection();
-			$update 	= $client->command('UPDATE User SET password = "'.$password.'" WHERE name = "'.$name.'"');
+			//$update 	= $client->command('UPDATE User SET password = "'.$password.'" WHERE name = "'.$name.'"');
+			$update 	= $client->command('select changePassword({username : "'.$email.'", password : "'.$password.'"})');
 			//$response 	= $update->getOData();
 			$dataUpdate = $update->getOData();
 			//$response = ['email' => $email, 'password' => $password, 'response' => $dataUpdate];

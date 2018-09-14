@@ -38,13 +38,13 @@
 
 			$GET = Yii::$app->request->get();
 			
-			# VALIDAMOS QUE ESTEN DEFINIDAS LAS VARIABLES GET (token, email) PARA EL CAMBIO DE CONTRASEÑA
+			// VALIDAMOS QUE ESTEN DEFINIDAS LAS VARIABLES GET (token, email) PARA EL CAMBIO DE CONTRASEÑA
 
 			if (isset($GET['token']) && isset($GET['email'])) {
 				
 				if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-					#	OBTENEMOS LAS CONTRASEÑAS INGRESADAS DEL FORMULARIO
+					//	OBTENEMOS LAS CONTRASEÑAS INGRESADAS DEL FORMULARIO
 					$email 				= $GET['email'];
 					$password  			= $model->password;
 					$repeat_password  	= $model->repeat_password;
