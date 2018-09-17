@@ -11,25 +11,7 @@ use yii\web\View;
 
 $this->title = 'RECORDAR CONTRASEÑA';
 //$this->params['breadcrumbs'][] = $this->title;
-$this->registerCss(".btn-send-message { 
-    box-sizing: border-box;
-    padding: 0 30px;
-    text-align: center; 
-    color: #fff;
-    font-size: 15px;
-    font-family: 'GothamRoundedBook';
-    background: #ff3d2f;
-    border: none;
-    transition: 0.4s;
-    height: 42px;
-    width: 100%;
-    line-height: 42px;
-    border-radius: 500px;
-    font-family: Gotham-Medium;
-}
-#form-password-reset{
-    text-align:center;
-}");
+
 ?>
 
 <div class="row">
@@ -59,3 +41,7 @@ $this->registerCss(".btn-send-message {
 
     </div>
 </div>
+<?php
+$this->registerCssFile("@web/css/account.css", [
+    'depends' => [\yii\bootstrap\BootstrapAsset::className()],
+], 'account');

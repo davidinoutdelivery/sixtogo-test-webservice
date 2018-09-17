@@ -2,22 +2,7 @@
 use yii\helpers\Html;
 
 $this->title = 'ACTUALIZACIÓN DE CONTRASEÑA';
-$this->registerCss(".btn-back { 
-    box-sizing: border-box;
-    padding: 0 30px;
-    text-align: center; 
-    color: #fff;
-    font-size: 15px;
-    font-family: 'GothamRoundedBook';
-    background: #ff3d2f;
-    border: none;
-    transition: 0.4s;
-    height: 42px;
-    line-height: 42px;
-    border-radius: 500px;
-    font-family: Gotham-Medium;
-}
-");
+
 
 ?>
 
@@ -67,3 +52,7 @@ $this->registerCss(".btn-back {
 
     </div>
 </div>
+<?php
+$this->registerCssFile("@web/css/account.css", [
+    'depends' => [\yii\bootstrap\BootstrapAsset::className()],
+], 'account');

@@ -2,25 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 $this->title = ($response['validateEmailToken']) ? 'ACTUALIZA TU CONTRASEÑA' : 'TOKEN INVÁLIDO';
-$this->registerCss(".btn-send-message { 
-    box-sizing: border-box;
-    padding: 0 30px;
-    text-align: center; 
-    color: #fff;
-    font-size: 15px;
-    font-family: 'GothamRoundedBook';
-    background: #ff3d2f;
-    border: none;
-    transition: 0.4s;
-    height: 42px;
-    width: 100%;
-    line-height: 42px;
-    border-radius: 500px;
-    font-family: Gotham-Medium;
-}
-#form-password-change{
-    text-align:center;
-}");
+
 ?>
 <div class="row">
     <div class="col-xs-12 col-md-6" style="margin: auto;text-align: center;float: none;">  
@@ -65,3 +47,7 @@ $this->registerCss(".btn-send-message {
     	?>
     </div>
 </div>
+<?php
+$this->registerCssFile("@web/css/account.css", [
+    'depends' => [\yii\bootstrap\BootstrapAsset::className()],
+], 'account');
