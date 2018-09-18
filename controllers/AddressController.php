@@ -11,8 +11,9 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Address;
 
-class SiteController extends Controller
+class AddressController extends Controller
 {
+
     /**
      * {@inheritdoc}
      */
@@ -63,12 +64,24 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new Address();
-        
-        $modalRender = Yii::$app->runAction('address/modal');
-        
+
         return $this->render('index', [
-            'model' => $model,
-            'modalRender' => $modalRender,
+                'model' => $model,
+        ]);
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
+    public function actionModal()
+    {
+        $model = new Address();
+
+//        return $this->renderPartial('modal-without-login', [
+        return $this->renderPartial('modal-with-login', [
+                'model' => $model,
         ]);
     }
 
@@ -90,7 +103,7 @@ class SiteController extends Controller
 
         $model->password = '';
         return $this->render('login', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -120,7 +133,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -133,4 +146,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
 }
