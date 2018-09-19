@@ -1,0 +1,40 @@
+.btn-send-message,.btn-login { 
+    box-sizing: border-box;
+    padding: 0 30px;
+    text-align: center; 
+    color: #fff;
+    font-size: 15px;
+    font-family: 'GothamRoundedBook';
+    background: #ff3d2f;
+    border: none;
+    transition: 0.4s;
+    height: 42px;
+    width: 100%;
+    line-height: 42px;
+    border-radius: 500px;
+    font-family: Gotham-Medium;
+}
+.btn-back { 
+    box-sizing: border-box;
+    padding: 0 30px;
+    text-align: center; 
+    color: #fff;
+    font-size: 15px;
+    font-family: 'GothamRoundedBook';
+    background: #ff3d2f;
+    border: none;
+    transition: 0.4s;
+    height: 42px;
+    line-height: 42px;
+    border-radius: 500px;
+    font-family: Gotham-Medium;
+}
+#form-password-reset{
+    text-align:center;
+}
+#form-password-change{
+    text-align:center;
+}
+#login-form{
+    text-align: left;
+}
