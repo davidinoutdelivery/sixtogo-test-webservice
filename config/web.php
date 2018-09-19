@@ -31,6 +31,9 @@ $config = [
     'components' => [
         'request' => [
             'cookieValidationKey' => '-BgLebI3QZV9r9DS6krJNmi5-NQgyHKr',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -66,6 +69,7 @@ $config = [
             'rules' => [
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '' => '/site/index',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'driver'],
             ],
         ],
         'view' => [

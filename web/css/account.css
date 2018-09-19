@@ -1,4 +1,4 @@
-.btn-send-message { 
+.btn-send-message,.btn-login { 
     box-sizing: border-box;
     padding: 0 30px;
     text-align: center; 
@@ -34,4 +34,7 @@
 }
 #form-password-change{
     text-align:center;
+}
+#login-form{
+    text-align: left;
 }
