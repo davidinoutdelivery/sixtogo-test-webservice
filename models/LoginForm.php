@@ -70,41 +70,39 @@ class LoginForm extends Model
             $session = Yii::$app->session;
             //if ($session->isActive){
                 
-                $session->open();
+            $session->open();
 
-                $session->set('nombre','Felipe Garzon');
-                //$session['user'] = new \ArrayObject;
-                $session['user'] = new User;
+            $session['user'] = new User;
 
-                $session['user']->rid               = $data->userData->getUser->rid;
-                $session['user']->authData          = $data->userData->getUser->authData;
-                $session['user']->cart              = $data->userData->getUser->cart;
-                $session['user']->createdAt         = $data->userData->getUser->createdAt;
-                //$session['user']->creditCards       = $data->userData->getUser->creditCards;
-                $session['user']->description       = $data->userData->getUser->description;
-                $session['user']->email             = $data->userData->getUser->email;
-                $session['user']->emailVerified     = $data->userData->getUser->emailVerified;
-                $session['user']->employmentArea    = $data->userData->getUser->employmentArea;
-                $session['user']->fullName          = $data->userData->getUser->fullName;
-                $session['user']->habeasData        = $data->userData->getUser->habeasData;
-                $session['user']->identification    = $data->userData->getUser->identification;
-                //$session['user']->name              = $data->userData->getUser->name;
-                $session['user']->nameFirst         = $data->userData->getUser->nameFirst;
-                $session['user']->nameLast          = $data->userData->getUser->nameLast;
-                $session['user']->onesignalUser     = $data->userData->getUser->onesignalUser;
-                $session['user']->password          = $this->password;
-                $session['user']->phone             = $data->userData->getUser->phone;
-                //$session['user']->pointSales        = $data->userData->getUser->pointSales;
-                //$session['user']->roles             = $data->userData->getUser->roles;
-                $session['user']->status            = $data->userData->getUser->status;
-                $session['user']->tags              = $data->userData->getUser->tags;
-                $session['user']->token             = $data->userData->getUser->token;
-                $session['user']->updatedAt         = $data->userData->getUser->updatedAt;
-                //$session['user']->userAddress       = $data->userData->getUser->userAddress;
+            $session['user']->rid               = $data->userData->getUser->rid;
+            $session['user']->authData          = $data->userData->getUser->authData;
+            $session['user']->cart              = $data->userData->getUser->cart;
+            $session['user']->createdAt         = $data->userData->getUser->createdAt;
+            //$session['user']->creditCards       = $data->userData->getUser->creditCards;
+            $session['user']->description       = $data->userData->getUser->description;
+            $session['user']->email             = $data->userData->getUser->email;
+            $session['user']->emailVerified     = $data->userData->getUser->emailVerified;
+            $session['user']->employmentArea    = $data->userData->getUser->employmentArea;
+            $session['user']->fullName          = $data->userData->getUser->fullName;
+            $session['user']->habeasData        = $data->userData->getUser->habeasData;
+            $session['user']->identification    = $data->userData->getUser->identification;
+            //$session['user']->name              = $data->userData->getUser->name;
+            $session['user']->nameFirst         = $data->userData->getUser->nameFirst;
+            $session['user']->nameLast          = $data->userData->getUser->nameLast;
+            $session['user']->onesignalUser     = $data->userData->getUser->onesignalUser;
+            $session['user']->password          = $this->password;
+            $session['user']->phone             = $data->userData->getUser->phone;
+            //$session['user']->pointSales        = $data->userData->getUser->pointSales;
+            //$session['user']->roles             = $data->userData->getUser->roles;
+            $session['user']->status            = $data->userData->getUser->status;
+            $session['user']->tags              = $data->userData->getUser->tags;
+            $session['user']->token             = $data->userData->getUser->token;
+            $session['user']->updatedAt         = $data->userData->getUser->updatedAt;
+            $session['user']->userAddress       = $data->userData->getUser->address;
 
             //}
 
-            $response = $data->userData;
+            $response = $data;
 
         }else{
             // HA OCURRIDO UN ERROR
