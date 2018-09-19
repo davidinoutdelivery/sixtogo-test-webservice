@@ -4,6 +4,10 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\curl;
+use yii\web\Session;
+
+use app\models\User;
 
 /**
  * LoginForm is the model behind the login form.
@@ -17,7 +21,7 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
-    private $_user = false;
+    //private $_user = false;
 
 
     /**
@@ -53,29 +57,60 @@ class LoginForm extends Model
         }
     }
 
-    /**
-     * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
-     */
     public function login()
     {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+        $curl = new curl\Curl();
+        
+        $request = $curl->get('http://localhost:4000/login/index?action=login&email='.$this->username.'&password='.$this->password);
+
+        $data = json_decode($request);
+        
+        if ($data->status == 'success') {
+            // SE HA VALIDADO CORRECTAMENTE EL USUARIO Y LA CONTRASEÑA
+            $session = Yii::$app->session;
+            //if ($session->isActive){
+                
+            $session->open();
+
+            $session['user'] = new User;
+
+            $session['user']->rid               = $data->userData->getUser->rid;
+            $session['user']->authData          = $data->userData->getUser->authData;
+            $session['user']->cart              = $data->userData->getUser->cart;
+            $session['user']->createdAt         = $data->userData->getUser->createdAt;
+            //$session['user']->creditCards       = $data->userData->getUser->creditCards;
+            $session['user']->description       = $data->userData->getUser->description;
+            $session['user']->email             = $data->userData->getUser->email;
+            $session['user']->emailVerified     = $data->userData->getUser->emailVerified;
+            $session['user']->employmentArea    = $data->userData->getUser->employmentArea;
+            $session['user']->fullName          = $data->userData->getUser->fullName;
+            $session['user']->habeasData        = $data->userData->getUser->habeasData;
+            $session['user']->identification    = $data->userData->getUser->identification;
+            //$session['user']->name              = $data->userData->getUser->name;
+            $session['user']->nameFirst         = $data->userData->getUser->nameFirst;
+            $session['user']->nameLast          = $data->userData->getUser->nameLast;
+            $session['user']->onesignalUser     = $data->userData->getUser->onesignalUser;
+            $session['user']->password          = $this->password;
+            $session['user']->phone             = $data->userData->getUser->phone;
+            //$session['user']->pointSales        = $data->userData->getUser->pointSales;
+            //$session['user']->roles             = $data->userData->getUser->roles;
+            $session['user']->status            = $data->userData->getUser->status;
+            $session['user']->tags              = $data->userData->getUser->tags;
+            $session['user']->token             = $data->userData->getUser->token;
+            $session['user']->updatedAt         = $data->userData->getUser->updatedAt;
+            $session['user']->userAddress       = $data->userData->getUser->address;
+
+            //}
+
+            $response = $data;
+
+        }else{
+            // HA OCURRIDO UN ERROR
+            $response = $data;
         }
-        return false;
+
+        return $response;
     }
 
-    /**
-     * Finds user by [[username]]
-     *
-     * @return User|null
-     */
-    public function getUser()
-    {
-        if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
-        }
-
-        return $this->_user;
-    }
+    
 }
