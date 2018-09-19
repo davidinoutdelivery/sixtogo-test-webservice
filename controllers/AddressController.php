@@ -6,14 +6,14 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\web\Session;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Address;
 
-class SiteController extends Controller
+class AddressController extends Controller
 {
+
     /**
      * {@inheritdoc}
      */
@@ -64,12 +64,24 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new Address();
-        
-        $modalRender = Yii::$app->runAction('address/modal');
-        
+
         return $this->render('index', [
-            'model' => $model,
-            'modalRender' => $modalRender,
+                'model' => $model,
+        ]);
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
+    public function actionModal()
+    {
+        $model = new Address();
+
+//        return $this->renderPartial('modal-without-login', [
+        return $this->renderPartial('modal-with-login', [
+                'model' => $model,
         ]);
     }
 
@@ -80,19 +92,19 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        $model = new LoginForm();
-
-        if ($model->load(Yii::$app->request->post())) {
-
-            $response = $model->login();
-            return $this->render('login-response',['response' => $response]);
-
-        }else{
-
-            $model->password = '';
-            return $this->render('login', ['model' => $model,]);
-
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
         }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+        }
+
+        $model->password = '';
+        return $this->render('login', [
+                'model' => $model,
+        ]);
     }
 
     /**
@@ -121,7 +133,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -134,4 +146,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
 }
