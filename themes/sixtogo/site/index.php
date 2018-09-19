@@ -27,6 +27,9 @@ use yii\helpers\VarDumper;
 use app\widgets\map\Map;
 use app\widgets\modal\Modal;
 use kartik\form\ActiveForm;
+use bookin\aws\checkbox\AwesomeCheckbox;
+
+//echo Spinner::widget(['width' => '150px', 'height' => '150px', 'border' => '15px']);
 
 $this->title = 'My Yii Application';
 
@@ -45,93 +48,10 @@ Modal::begin([
         'show' => true
     ]
 ]);
-?>
-<div class="row m-0">
-    <div class="col-sm-5 py-15">
-        <h3 class="m-0 gotham-medium">Bienvenido a Six To Go</h3>
-        <h5 class="gotham-medium">Por favor escribe tu dirección para validar cobertura</h5>
-        <?php
-        $form = ActiveForm::begin([
-                'id' => 'addressForm',
-                'type' => ActiveForm::TYPE_VERTICAL
-        ]);
 
-//echo Spinner::widget(['width' => '150px', 'height' => '150px', 'border' => '15px']);
-        echo $form->field($model, 'address')
-            ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
-        ?>
-        <div class="col-sm-8 p-0">
-            <?php
-            echo $form->field($model, 'description')
-                ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
-            ?>
-        </div>
-        <div class="col-sm-4 p-0">
-            <?php
-            echo $form->field($model, 'isNewRecord', [
-                'template' => '{beginLabel}{labelTitle}{endLabel}{input}\n{hint}\n{error}\n{endWrapper}'
-            ])->checkbox(['id' => 'chkSave', 'class' => 'checkbox']);
-            ?>
-        </div>
-        <?php
-        echo Html::submitButton('CONTINUAR', ['class' => 'btn submit']);
+echo $modalRender;
 
-        ActiveForm::end();
-        ?>
-    </div>
-    <div class="col-sm-7 p-0">
-        <?= Map::widget(); ?>
-    </div>
-</div>
-<?php
 Modal::end();
-//Modal::begin([
-//    'header' => '<h3>Bienvenido a Six To Go</h3>'
-//    . '<h5>Por favor escribe tu dirección para validar cobertura</h5>',
-//    'map' => Map::widget(),
-//    'id' => 'modalAddress',
-//    'size' => 'modal-lg',
-//    'toggleButton' => [
-//        'hidden' => 'hidden',
-//        'id' => 'openModalAddress',
-//        'label' => 'click me',
-//    ],
-//]);
-//$form = ActiveForm::begin([
-//            'id' => 'addressForm',
-//            'type' => ActiveForm::TYPE_VERTICAL
-//        ]);
-//
-////echo Spinner::widget(['width' => '150px', 'height' => '150px', 'border' => '15px']);
-//
-?>
-<!--<label>Escribe tu dirección</label>-->
-<?=
-''
-//        $form->field($model, 'address')
-//        ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
-?>
-<!--<label>Datos complementarios</label>-->
-<?=
-''
-//        $form->field($model, 'description')
-//        ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
-//
-?>
-<!--<label>Guardar Dirección</label>-->
-<?=
-''
-//        $form->field($model, 'isNewRecord', [
-//            'template' => '{beginLabel}{labelTitle}{endLabel}{input}\n{hint}\n{error}\n{endWrapper}'
-//        ])
-//        ->checkbox(['id' => 'chkSave', 'class' => 'checkbox'])
-//
-?>
-<?= ''//Html::submitButton('CONTINUAR', ['class' => 'btn submit']) ?>
-<?php
-//ActiveForm::end();
-//
-//Modal::end();
 ?>
 <div class="site-index">
 
