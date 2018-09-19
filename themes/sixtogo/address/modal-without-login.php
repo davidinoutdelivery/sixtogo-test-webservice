@@ -24,65 +24,65 @@ use bookin\aws\checkbox\AwesomeCheckbox;
 ?>
 <div class="row m-0">
     <div class="col-sm-5 py-15">
-        <div class="row m-0">
-            <h3 class="m-0 gotham-medium">Bienvenido a Six To Go</h3>
-            <h5 class="gotham-medium">Por favor escribe tu dirección para validar cobertura</h5>
-            <?php
-            $form = ActiveForm::begin([
+        <h3 class="m-0 gotham-medium">Bienvenido a Six To Go</h3>
+        <h5 class="gotham-medium">Por favor escribe tu dirección para validar cobertura</h5>
+        <?php
+        $form = ActiveForm::begin([
                     'id' => 'addressForm',
                     'type' => ActiveForm::TYPE_VERTICAL
-            ]);
-            ?>
-            <div class="row px-15">
-                <div class="col-sm-12 p-0">
-                    <?php
-                    echo $form->field($model, 'address')
+        ]);
+        ?>
+        <div class="row px-15">
+            <div class="col-sm-12 p-0">
+                <?php
+                echo $form->field($model, 'address')
                         ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
-                    ?>
-                </div>
+                ?>
             </div>
-            <div class="row px-15">
-                <div class="col-sm-12 p-0">
-                    <?php
-                    echo $form->field($model, 'description')
-                        ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
-                    ?>
-                </div>
-            </div>
-            <?php
-            echo Html::submitButton('CONTINUAR', ['class' => 'btn submit']);
-            ?>
         </div>
+        <div class="row px-15">
+            <div class="col-sm-12 p-0">
+                <?php
+                echo $form->field($model, 'description')
+                        ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
+                ?>
+            </div>
+        </div>
+        <?php
+        echo Html::submitButton('CONTINUAR', ['class' => 'btn submit']);
+
+        ActiveForm::end();
+        ?>
         <hr class="hr-888">
+        <label class="control-label">Para ver tus direcciones por favor inicia sesión</label>
         <div class="row m-0">
-            <label class="control-label">Para ver tus direcciones por favor inicia sesión</label>
             <?php
             $form = ActiveForm::begin([
-                    'id' => 'loginForm',
-                    'type' => ActiveForm::TYPE_VERTICAL
+                        'id' => 'loginForm',
+                        'type' => ActiveForm::TYPE_VERTICAL
             ]);
             ?>
             <div class="row table-row px-15">
                 <div class="col-sm-8 p-0">
                     <?php
                     echo $form->field($model, 'address', [
-                            'template' => '{input}{error}{hint}'
-                        ])
-                        ->textInput([
-                            'maxlength' => 255,
-                            'id' => 'addressGeocode',
-                            'class' => 'addressForm',
-                            'placeholder' => 'Usuario'
+                                'template' => '{input}{error}{hint}'
+                            ])
+                            ->textInput([
+                                'maxlength' => 255,
+                                'id' => 'addressGeocode',
+                                'class' => 'addressForm',
+                                'placeholder' => 'Usuario'
                     ]);
 
                     echo $form->field($model, 'description', [
-                            'template' => '{input}{error}{hint}'
-                        ])
-                        ->textInput([
-                            'maxlength' => 255,
-                            'id' => 'latlngGeocode',
-                            'class' => 'addressForm',
-                            'placeholder' => 'Contraseña'
+                                'template' => '{input}{error}{hint}'
+                            ])
+                            ->textInput([
+                                'maxlength' => 255,
+                                'id' => 'latlngGeocode',
+                                'class' => 'addressForm',
+                                'placeholder' => 'Contraseña'
                     ]);
                     ?>
                 </div>
@@ -92,7 +92,6 @@ use bookin\aws\checkbox\AwesomeCheckbox;
                     ?>
                 </div>
             </div>
-
             <?php
             echo Html::submitButton('INICIAR SESIÓN', ['class' => 'btn submit-success']);
 

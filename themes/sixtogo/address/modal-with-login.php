@@ -28,15 +28,15 @@ use bookin\aws\checkbox\AwesomeCheckbox;
         <h5 class="gotham-medium">Por favor escribe tu dirección para validar cobertura</h5>
         <?php
         $form = ActiveForm::begin([
-                'id' => 'addressForm',
-                'type' => ActiveForm::TYPE_VERTICAL
+                    'id' => 'addressForm',
+                    'type' => ActiveForm::TYPE_VERTICAL
         ]);
         ?>
         <div class="row px-15">
             <div class="col-sm-12 p-0">
                 <?php
                 echo $form->field($model, 'address')
-                    ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
+                        ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
                 ?>
             </div>
         </div>
@@ -44,7 +44,7 @@ use bookin\aws\checkbox\AwesomeCheckbox;
             <div class="col-sm-8 p-0">
                 <?php
                 echo $form->field($model, 'description')
-                    ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
+                        ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
                 ?>
             </div>
             <div class="col-sm-4 p-0">
@@ -64,7 +64,7 @@ use bookin\aws\checkbox\AwesomeCheckbox;
                 ?>
             </div>
         </div>
-        <hr class="hr-888">
+        <hr class="hr-888 mt-5">
         <label class="control-label">Tus Direcciones</label>
         <div class="row m-0">
             <div class="col-sm-3 p-0">
