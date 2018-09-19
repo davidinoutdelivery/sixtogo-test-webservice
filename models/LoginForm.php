@@ -4,7 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-use yii\curl;
+use linslin\yii2\curl;
 use yii\web\Session;
 
 use app\models\User;
@@ -71,7 +71,9 @@ class LoginForm extends Model
             //if ($session->isActive){
                 
             $session->open();
-
+            
+            $session['login'] = true;
+            
             $session['user'] = new User;
 
             $session['user']->rid               = $data->userData->getUser->rid;
