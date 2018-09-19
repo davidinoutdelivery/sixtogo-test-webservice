@@ -9,7 +9,7 @@ use yii\web\Response;
 use yii\web\Session;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\RegisterForm;
 use app\models\Address;
 
 class SiteController extends Controller
@@ -107,31 +107,30 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
 
-            return $this->refresh();
+    /*
+        Register action
+    */
+    public function actionRegister()
+    {
+        $model = new RegisterForm;
+
+        if ($model->load(Yii::$app->request->post())) {
+            
+            $insert = $model->registerUser();
+
+            if (is_a($insert, 'PhpOrient\Exceptions\PhpOrientException')) {
+                // HA OCURRIDO UN ERROR AL MOMENTO DE EJECUTAR LA CONSULTA
+                $response = array("status" => "error", "message" => "No se pudo realizar el registro.");
+            }else{
+                // SE HA REGISTRADO EL USUARIO EXITOSAMENTE
+                $response = array("status" => "success", "message" => "Se ha realizado el registro correctamente");
+            }
+
+            return $this->render('register-response',['response' => $response]);
         }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
+        else{
+            return $this->render('register',['model' => $model]);
+        }
     }
 }
