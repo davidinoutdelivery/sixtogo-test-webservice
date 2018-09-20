@@ -35,6 +35,6 @@
 #form-password-change{
     text-align:center;
 }
-#login-form{
+#login-form,#register-form{
     text-align: left;
 }

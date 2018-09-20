@@ -1,0 +1,130 @@
+/* v1.0 | 20080212 */
+ 
+/*html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}*/
+body {
+    line-height: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+ 
+/* No olvides definir estilos para focus */
+:focus {
+    outline: 0;
+}
+ 
+/* No olvides resaltar de alguna manera el texto insertado/borrado */
+ins {
+    text-decoration: none;
+}
+del {
+    text-decoration: line-through;
+}
+ 
+/* En el código HTML es necesario añadir cellspacing="0" */
+table {
+      border-collapse: collapse;
+      border-spacing: 0;
+}
+header {
+    width: 100%
+}
+header .container {
+    display: flex;
+    justify-content: center;
+}
+header .container img {
+    height: 150px;
+    margin: 100px 0 25px 0;
+}
+main {
+    width: 100%;
+}
+main h1 {
+    margin: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 25px;
+}
+main p {
+    margin: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    text-align: justify;
+    color: #555;
+}
+footer {
+    width: 100%;
+    background-color: #eee;
+}
+footer .container {
+    margin: 30px 10vw; 
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'Lato', sans-serif;
+}
+footer .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #666;
+}
+footer .content {
+    font-size: 20px;
+    color: #999;
+}
+footer .content div {
+    margin-top: 5px;
+}
+footer .container .connect {
+    width: 30%;
+    min-width: 200px;
+    margin: 0 30px 30px 0;
+}
+footer .container .connect .logo img {
+    height: 60px;
+}
+footer .container .connect .content .socials {
+    margin: 20px 0;
+}
+footer .container .connect .content .socials .icon {
+    margin-right: 20px;
+}
+footer .container .connect .content .socials img {
+    height: 32px;
+    width: 32px;
+}
+footer .container .map {
+    width: 30%;
+    min-width: 200px;
+    margin: 0 30px 30px 0;
+}
+footer .container .site {
+    width: 30%;
+    min-width: 200px;
+}

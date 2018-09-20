@@ -13,6 +13,7 @@ $this->title = 'Iniciar Sesión';
 <div class="row">
     <div class="col-xs-12 col-md-6" style="margin: auto;text-align: center;float: none;">
         
+        <h1 class="gotham-medium"><?php echo $this->title;?></h1>
         
         <?= Html::img('@web/images/logo.png', ['alt' => 'LogoSixToGo','width' => '199px', 'height' => '150px']) ?>
 
@@ -34,6 +35,11 @@ $this->title = 'Iniciar Sesión';
             </div>
 
         <?php ActiveForm::end(); ?>
+        
+        <div class="col-12" style="float: left;width: 100%;padding-top: 10px;">
+            <p class="gotham-medium">No tienes una cuenta?, <a href="register">Regístrate</a></p>
+            <p class="gotham-medium">Has olvidado tu contraseña?, <a href="../account/index">Recuperar Contraseña</a></p>
+        </div>
 
     </div>
 </div>
