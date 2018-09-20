@@ -47,5 +47,22 @@
 			}
 		}
 
+		// 	VALIDACION DE LISTA BLANCA PARA PAGINAS DE DOCUMENTACION
+		public function validateDoc($document)
+		{
+			if ($document == 'terms_and_conditions' ||
+				$document == 'privacy_policy') {
+				
+				$render = $document;
+
+			}else{
+
+				$render = "no_document";
+
+			}
+
+			return $render;
+		}
+		
 	}
 ?>

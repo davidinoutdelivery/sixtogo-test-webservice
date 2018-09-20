@@ -130,7 +130,27 @@ class SiteController extends Controller
             return $this->render('register-response',['response' => $response]);
         }
         else{
-            return $this->render('register',['model' => $model]);
+
+           
+            $modalTerms     = Yii::$app->runAction('site/terms');
+            $modalPolicy    = Yii::$app->runAction('site/privacy');
+
+            return $this->render('register', [
+                'model'         => $model,
+                'modalTerms'    => $modalTerms,
+                'modalPolicy'   => $modalPolicy
+            ]);
+        
         }
+    }
+
+    public function actionTerms()
+    {
+        return $this->renderPartial('terms');
+    }
+
+    public function actionPrivacy()
+    {
+        return $this->renderPartial('privacy');
     }
 }
