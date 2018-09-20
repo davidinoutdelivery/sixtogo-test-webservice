@@ -30,11 +30,29 @@ $asset = new ThemeAsset();
         <div class="wrap">
             <?php
             NavBar::begin([
-                'brandLabel' => Html::img($themeAsset->baseUrl . '/img/header_logo.png', ['alt' => Yii::$app->name]),
+                'brandLabel' => Html::beginTag('div', [
+                    'class' => 'row'
+                ]) .
+                Html::beginTag('a', [
+                    'href' => '/'
+                ]) .
+                Html::img($themeAsset->baseUrl . '/img/header_logo.png', [
+                    'alt' => Yii::$app->name
+                ]) .
+                Html::endTag('a') .
+                Html::beginTag('a', [
+                    'href' => '/'
+                ]) .
+                Html::tag('span', '', [
+                    'class' => 'glyphicon glyphicon-map-marker',
+                    'aria-hidden' => true
+                ]) .
+                Html::endTag('a') .
+                Html::endTag('div'),
                 'brandOptions' => [
-                    'style' => 'height: auto;'
+                    'style' => 'height: auto; padding: 5px 15px;'
                 ],
-                'brandUrl' => Yii::$app->homeUrl,
+                'brandUrl' => 'javascript:void(0)',
                 'options' => [
                     'class' => 'navbar-main navbar-fixed-top',
                 ],
@@ -50,7 +68,10 @@ $asset = new ThemeAsset();
                         'options' => ['class' => 'navbar-main-nav navbar-right'],
                         'items' => [
                             [
-                                'label' => '',
+                                'label' => Html::tag('span', '', [
+                                    'class' => 'glyphicon glyphicon-map-marker',
+                                    'aria-hidden' => true
+                                ]),
                                 'encode' => false
                             ]
                         ],
@@ -59,26 +80,26 @@ $asset = new ThemeAsset();
                 </div>
                 <div class="col-xs-offset-8">
                     <?php
+                    $session = Yii::$app->session;
+                    $session->open();
+
                     echo Nav::widget([
                         'options' => ['class' => 'navbar-main-nav navbar-right'],
                         'items' => [
                             [
                                 'label' => 'Home',
-                                'url' => ['/site/index']
+                                'url' => ['site/index']
                             ],
                             ['label' => 'About', 'url' => ['/site/about']],
                             ['label' => 'Contact', 'url' => ['/site/contact']],
-//                            Yii::$app->user->isGuest ? (
-//                                ['label' => 'Login', 'url' => ['/site/login']]
-//                                ) : (
-//                                '<li>'
-//                                . Html::beginForm(['/site/logout'], 'post')
-//                                . Html::submitButton(
-//                                    'Logout(' . Yii::$app->user->identity->username . ')', ['class' => 'btn btn-link logout']
-//                                )
-//                                . Html::endForm()
-//                                . '</li>'
-//                                )
+                            (isset($session['login']) && $session['login'] === true) ? [
+                                'label' => '<span class="glyphicon glyphicon-off" aria-hidden="true"></span>',
+                                'url' => ['site/logout'],
+                                'encode' => false
+                                ] : [
+                                'label' => 'Login',
+                                'url' => ['site/login']
+                                ]
                         ],
                     ]);
                     ?>

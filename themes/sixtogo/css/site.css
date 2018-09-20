@@ -190,10 +190,20 @@ a.desc:after {
 {
     padding: 0px !important;
 }
+.py-10
+{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
 .py-15
 {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
+}
+.px-0
+{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 .px-15
 {

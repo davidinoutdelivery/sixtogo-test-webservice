@@ -77,9 +77,6 @@ class AddressController extends Controller {
         $session = Yii::$app->session;
         $session->open();
 
-//        VarDumper::dump(Yii::$app->request->post());
-//        die();
-
         $modelAddress = new Address();
         if (isset($session['login']) && $session['login'] === true) {
             $view = 'modal-with-login';

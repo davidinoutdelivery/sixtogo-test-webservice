@@ -1,5 +1,4 @@
 <?php
-
 /**
  * -----------------------------------------------------------------------------
  * Creado Por     | David Alejandro Domínguez Rivera
@@ -18,9 +17,11 @@
 namespace app\widgets\modal;
 
 use Yii;
+use yii\web\View;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
+use richardfan\widget\JSRegister;
 
 /**
  * Modal renders a modal window that can be toggled by clicking on a button.
@@ -115,6 +116,14 @@ class Modal extends Widget
     public $toggleButton = false;
 
     /**
+     * @var array the id list for link the toggle action.
+     * The toggle action link is used to link an element with the action of toggle 
+     * the visibility of the modal window.
+     * If this property is false, no toggle action will be linked.
+     */
+    public $toggleButtonList = false;
+
+    /**
      * Initializes the widget.
      */
     public function init()
@@ -124,6 +133,7 @@ class Modal extends Widget
         $this->initOptions();
 
         echo $this->renderToggleButton() . "\n";
+        $this->linkToggleAction();
         echo Html::beginTag('div', $this->options) . "\n";
         echo Html::beginTag('div', ['class' => 'modal-dialog ' . $this->size]) . "\n";
         echo Html::beginTag('div', ['class' => 'modal-content']) . "\n";
@@ -155,12 +165,12 @@ class Modal extends Widget
         $return = null;
 
         if ($this->header !== false) {
-            
+
             $button = $this->renderCloseButton();
             if ($button !== null) {
                 $this->header = $button . "\n" . $this->header;
             }
-            
+
             Html::addCssClass($this->headerOptions, ['widget' => 'modal-header']);
             $return = Html::tag('div', "\n" . $this->header . "\n", $this->headerOptions);
         }
@@ -209,7 +219,7 @@ class Modal extends Widget
     protected function renderToggleButton()
     {
         $return = null;
-        
+
         if (($toggleButton = $this->toggleButton) !== false) {
             $tag = ArrayHelper::remove($toggleButton, 'tag', 'button');
             $label = ArrayHelper::remove($toggleButton, 'label', 'Show');
@@ -219,8 +229,32 @@ class Modal extends Widget
 
             $return = Html::tag($tag, $label, $toggleButton);
         }
-        
+
         return $return;
+    }
+
+    /**
+     * Renders the toggle button.
+     * @return string the rendering result
+     */
+    protected function linkToggleAction()
+    {
+        if (($idList = $this->toggleButtonList) !== false && $this->id) {
+            JSRegister::begin([
+                'key' => 'bootstrap-modal',
+                'position' => View::POS_READY
+            ]);
+            ?>
+            <script>
+            <?php foreach ($idList as $id) : ?>
+                    $('#<?= $id ?>').click(function () {
+                        $('#<?= $this->id ?>').modal('toggle');
+                    });
+            <?php endforeach; ?>
+            </script>
+            <?php
+            JSRegister::end();
+        }
     }
 
     /**
@@ -230,7 +264,7 @@ class Modal extends Widget
     protected function renderCloseButton()
     {
         $return = null;
-        
+
         if (($closeButton = $this->closeButton) !== false) {
             $tag = ArrayHelper::remove($closeButton, 'tag', 'button');
             $label = ArrayHelper::remove($closeButton, 'label', '&times;');
@@ -240,10 +274,10 @@ class Modal extends Widget
 
             $return = Html::tag($tag, $label, $closeButton);
         }
-        
+
         return $return;
     }
-    
+
     /**
      * Initializes the widget options.
      * This method sets the default values for various options.
@@ -254,7 +288,7 @@ class Modal extends Widget
             'class' => 'fade',
             'role' => 'dialog',
             'tabindex' => -1,
-                ], $this->options);
+            ], $this->options);
         Html::addCssClass($this->options, ['widget' => 'modal']);
 
         if ($this->clientOptions !== false) {
@@ -266,13 +300,13 @@ class Modal extends Widget
                 'data-dismiss' => 'modal',
                 'aria-hidden' => 'true',
                 'class' => 'close',
-                    ], $this->closeButton);
+                ], $this->closeButton);
         }
 
         if ($this->toggleButton !== false) {
             $this->toggleButton = array_merge([
                 'data-toggle' => 'modal',
-                    ], $this->toggleButton);
+                ], $this->toggleButton);
             if (!isset($this->toggleButton['data-target']) && !isset($this->toggleButton['href'])) {
                 $this->toggleButton['data-target'] = '#' . $this->options['id'];
             }
