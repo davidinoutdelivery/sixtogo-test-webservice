@@ -27,7 +27,7 @@ $this->title = 'Crear Cuenta';
         'clientOptions' => [
             'show' => false
         ],
-        'toggleButtonList' => ['modalTerms'],
+        'toggleButtonList' => ['btnModalTerms'],
     ]);
 
     echo $modalTerms;
@@ -49,7 +49,7 @@ $this->title = 'Crear Cuenta';
         'clientOptions' => [
             'show' => false
         ],
-        'toggleButtonList' => ['modalPolicy'],
+        'toggleButtonList' => ['btnModalPolicy'],
     ]);
 
     echo $modalPolicy;
@@ -86,7 +86,7 @@ $this->title = 'Crear Cuenta';
                 'template' => "<div class=\"col-lg-12\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",'checked' => false,'required' => true])->label("Acepto que soy mayor de 18 años.") ?>
 
             <?= $form->field($model, 'termsAndConditions')->checkbox([
-                'template' => "<div class=\"col-lg-12\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",'checked' => false,'required' => true])->label("Acepto los <a href='javascript:void(0)' onclick=verModal('#modalTerms')>Términos y Condiciones</a> y <a href='javascript:void(0)' onclick=verModal('#modalPolicy')>Políticas de Privacidad</a>") ?>
+                'template' => "<div class=\"col-lg-12\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",'checked' => false,'required' => true])->label("Acepto los <a href='javascript:void(0)' id='btnModalTerms'>Términos y Condiciones</a> y <a href='javascript:void(0)' id='btnModalPolicy'>Políticas de Privacidad</a>") ?>
 
             <div class="form-group">
                 <div class="col-lg-12">
