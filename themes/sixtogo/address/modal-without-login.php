@@ -21,6 +21,11 @@ use app\widgets\map\Map;
 use app\widgets\modal\Modal;
 use kartik\form\ActiveForm;
 use bookin\aws\checkbox\AwesomeCheckbox;
+
+/**
+ * @var $modelAddress app\models\Address
+ * @var $modelLoginForm app\models\LoginForm
+ */
 ?>
 <div class="row m-0">
     <div class="col-sm-5 py-15">
@@ -29,13 +34,14 @@ use bookin\aws\checkbox\AwesomeCheckbox;
         <?php
         $form = ActiveForm::begin([
                     'id' => 'addressForm',
-                    'type' => ActiveForm::TYPE_VERTICAL
+                    'type' => ActiveForm::TYPE_VERTICAL,
+                    'action' => ['address/set']
         ]);
         ?>
         <div class="row px-15">
             <div class="col-sm-12 p-0">
                 <?php
-                echo $form->field($model, 'address')
+                echo $form->field($modelAddress, 'address')
                         ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
                 ?>
             </div>
@@ -43,7 +49,7 @@ use bookin\aws\checkbox\AwesomeCheckbox;
         <div class="row px-15">
             <div class="col-sm-12 p-0">
                 <?php
-                echo $form->field($model, 'description')
+                echo $form->field($modelAddress, 'description')
                         ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
                 ?>
             </div>
@@ -59,13 +65,14 @@ use bookin\aws\checkbox\AwesomeCheckbox;
             <?php
             $form = ActiveForm::begin([
                         'id' => 'loginForm',
-                        'type' => ActiveForm::TYPE_VERTICAL
+                        'type' => ActiveForm::TYPE_VERTICAL,
+                        'action' => ['site/login']
             ]);
             ?>
             <div class="row table-row px-15">
                 <div class="col-sm-8 p-0">
                     <?php
-                    echo $form->field($model, 'address', [
+                    echo $form->field($modelLoginForm, 'username', [
                                 'template' => '{input}{error}{hint}'
                             ])
                             ->textInput([
@@ -75,7 +82,7 @@ use bookin\aws\checkbox\AwesomeCheckbox;
                                 'placeholder' => 'Usuario'
                     ]);
 
-                    echo $form->field($model, 'description', [
+                    echo $form->field($modelLoginForm, 'password', [
                                 'template' => '{input}{error}{hint}'
                             ])
                             ->textInput([

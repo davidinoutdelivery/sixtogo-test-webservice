@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\VarDumper;
 use linslin\yii2\curl;
 use yii\web\Session;
 
@@ -64,6 +65,8 @@ class LoginForm extends Model
         $request = $curl->get('http://localhost:4000/login/index?action=login&email='.$this->username.'&password='.$this->password);
 
         $data = json_decode($request);
+        
+        VarDumper::dump($data,10,true);
         
         if ($data->status == 'success') {
             // SE HA VALIDADO CORRECTAMENTE EL USUARIO Y LA CONTRASEÑA

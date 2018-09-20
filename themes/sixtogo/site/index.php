@@ -45,11 +45,11 @@ Modal::begin([
     'id' => 'modalAddress',
     'size' => 'modal-lg',
     'clientOptions' => [
-        'show' => true
+        'show' => $modalRender['render']
     ]
 ]);
 
-echo $modalRender;
+echo $modalRender['modal'];
 
 Modal::end();
 ?>

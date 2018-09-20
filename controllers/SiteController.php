@@ -12,13 +12,12 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Address;
 
-class SiteController extends Controller
-{
+class SiteController extends Controller {
+
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -43,8 +42,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function actions()
-    {
+    public function actions() {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -61,15 +59,24 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $model = new Address();
+
+        $session = Yii::$app->session;
+        $session->open();
         
-        $modalRender = Yii::$app->runAction('address/modal');
+//        $session->destroy();
         
+        $modalRender['render'] = false;
+        if (!isset($session['address']) || empty($session['address'])) {
+            $modalRender['render'] = true;
+        }
+
+        $modalRender['modal'] = Yii::$app->runAction('address/modal');
+
         return $this->render('index', [
-            'model' => $model,
-            'modalRender' => $modalRender,
+                    'model' => $model,
+                    'modalRender' => $modalRender,
         ]);
     }
 
@@ -78,20 +85,17 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post())) {
-
+            
             $response = $model->login();
-            return $this->render('login-response',['response' => $response]);
-
-        }else{
+            return $this->render('login-response', ['response' => $response]);
+        } else {
 
             $model->password = '';
             return $this->render('login', ['model' => $model,]);
-
         }
     }
 
@@ -100,8 +104,7 @@ class SiteController extends Controller
      *
      * @return Response
      */
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -112,8 +115,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionContact()
-    {
+    public function actionContact() {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -121,7 +123,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -130,8 +132,8 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionAbout()
-    {
+    public function actionAbout() {
         return $this->render('about');
     }
+
 }
