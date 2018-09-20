@@ -241,7 +241,6 @@ class Modal extends Widget
     {
         if (($idList = $this->toggleButtonList) !== false && $this->id) {
             JSRegister::begin([
-                'key' => 'bootstrap-modal',
                 'position' => View::POS_READY
             ]);
             ?>
