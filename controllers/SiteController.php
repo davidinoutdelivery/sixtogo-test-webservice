@@ -11,33 +11,17 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Address;
+use yii\helpers\VarDumper;
 
 class SiteController extends Controller
 {
+
     /**
      * {@inheritdoc}
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+        return [];
     }
 
     /**
@@ -64,12 +48,22 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new Address();
-        
-        $modalRender = Yii::$app->runAction('address/modal');
-        
+
+        $session = Yii::$app->session;
+        $session->open();
+
+//        $session->destroy();
+
+        $modalRender['render'] = false;
+        if (!isset($session['address']) || empty($session['address'])) {
+            $modalRender['render'] = true;
+        }
+
+        $modalRender['modal'] = Yii::$app->runAction('address/modal');
+
         return $this->render('index', [
-            'model' => $model,
-            'modalRender' => $modalRender,
+                'model' => $model,
+                'modalRender' => $modalRender,
         ]);
     }
 
@@ -85,13 +79,13 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
 
             $response = $model->login();
-            return $this->render('login-response',['response' => $response]);
 
-        }else{
-
+            if ($response === true) {
+                $this->redirect(['site/index']);
+            }
+        } else {
             $model->password = '';
             return $this->render('login', ['model' => $model,]);
-
         }
     }
 
@@ -102,9 +96,11 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        $session = Yii::$app->session;
+        $session->open();
+        $session->destroy();
 
-        return $this->goHome();
+        $this->redirect(['site/index']);
     }
 
     /**
@@ -121,7 +117,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -134,4 +130,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
 }

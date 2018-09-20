@@ -45,11 +45,11 @@ Modal::begin([
     'id' => 'modalAddress',
     'size' => 'modal-lg',
     'clientOptions' => [
-        'show' => true
+        'show' => $modalRender['render']
     ]
 ]);
 
-echo $modalRender;
+echo $modalRender['modal'];
 
 Modal::end();
 ?>
@@ -60,7 +60,7 @@ Modal::end();
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <p><a class="btn btn-lg btn-success" href="javascript:void(0)">Get started with Yii</a></p>
     </div>
 
     <div class="body-content">

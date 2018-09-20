@@ -8,37 +8,30 @@ use yii\db\ActiveRecord;
 use app\models\OrientDb;
 use yii\helpers\VarDumper;
 
-class Login extends Model
-{
-	
-	public function requestLogin($data)
-	{
-		try {
-			//	
-			$client = OrientDb::connection($data['email'],$data['password']);
+class Login extends Model {
 
-			if (is_a($client,'PhpOrient\Exceptions\PhpOrientException')) 
-			{
-				$response = json_encode([	'status' 	=> 'error',
-											'message' 	=> 'Usuario y/o contraseña invalidos.']);
-			} 
-			else 
-			{
-				# VALIDACION DE USUARIO Y CONTRASEÑA PARA EL LOGUEO
-				$select 	= $client->command('SELECT getUser({"username":"' . $data['email'] . '"})');
-				$userData 	= $select->getOData();
+    public function requestLogin($data) {
+        try {
+            //	
+            $client = OrientDb::connection($data['email'], $data['password']);
 
-				$response 	= json_encode([	'status' 	=> 'success',
-											'userData' 	=> $userData]);
+            if (is_a($client, 'PhpOrient\Exceptions\PhpOrientException')) {
+                $response = json_encode(['status' => 'error',
+                    'message' => 'Usuario y/o contraseña invalidos.']);
+            } else {
+                # VALIDACION DE USUARIO Y CONTRASEÑA PARA EL LOGUEO
+                $select = $client->command('SELECT getUser({"username":"' . $data['email'] . '"})');
+                $userData = $select->getOData();
 
-			}
+                $response = json_encode(['status' => 'success',
+                    'userData' => $userData]);
+            }
 
-			return $response;
+            return $response;
+        } catch (Exception $e) {
 
-		} catch (Exception $e) {
+            return $e;
+        }
+    }
 
-			return $e;
-			
-		}
-	}
 }
