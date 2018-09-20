@@ -24,7 +24,8 @@
         "kartik-v/yii2-widget-activeform": "@dev",
         "bookin/yii2-awesome-bootstrap-checkbox": "@dev",
         "kartik-v/yii2-widget-typeahead": "*",
-        "linslin/yii2-curl": "*"
+        "linslin/yii2-curl": "*",
+        "richardfan1126/yii2-js-register": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -4,9 +4,9 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\VarDumper;
 use linslin\yii2\curl;
 use yii\web\Session;
-
 use app\models\User;
 
 /**
@@ -17,12 +17,12 @@ use app\models\User;
  */
 class LoginForm extends Model
 {
+
     public $username;
     public $password;
     public $rememberMe = true;
 
     //private $_user = false;
-
 
     /**
      * @return array the validation rules.
@@ -60,53 +60,46 @@ class LoginForm extends Model
     public function login()
     {
         $curl = new curl\Curl();
-        
-        $request = $curl->get('http://localhost:4000/login/index?action=login&email='.$this->username.'&password='.$this->password);
+
+        $request = $curl->get('http://localhost:4000/login/index?action=login&email=' . $this->username . '&password=' . $this->password);
 
         $data = json_decode($request);
-        
-        if ($data->status == 'success') {
+
+        if (isset($data->status) && $data->status == 'success') {
             // SE HA VALIDADO CORRECTAMENTE EL USUARIO Y LA CONTRASEÑA
             $session = Yii::$app->session;
-            //if ($session->isActive){
-                
             $session->open();
-            
-            $session['login'] = true;
-            
-            $session['user'] = new User;
 
-            $session['user']->rid               = $data->userData->getUser->rid;
-            $session['user']->authData          = $data->userData->getUser->authData;
-            $session['user']->cart              = $data->userData->getUser->cart;
-            $session['user']->createdAt         = $data->userData->getUser->createdAt;
+            $session['login'] = true;
+            $session['user'] = new User;
+            $session['user']->rid = $data->userData->getUser->rid;
+            $session['user']->authData = $data->userData->getUser->authData;
+            $session['user']->cart = $data->userData->getUser->cart;
+            $session['user']->createdAt = $data->userData->getUser->createdAt;
             //$session['user']->creditCards       = $data->userData->getUser->creditCards;
-            $session['user']->description       = $data->userData->getUser->description;
-            $session['user']->email             = $data->userData->getUser->email;
-            $session['user']->emailVerified     = $data->userData->getUser->emailVerified;
-            $session['user']->employmentArea    = $data->userData->getUser->employmentArea;
-            $session['user']->fullName          = $data->userData->getUser->fullName;
-            $session['user']->habeasData        = $data->userData->getUser->habeasData;
-            $session['user']->identification    = $data->userData->getUser->identification;
+            $session['user']->description = $data->userData->getUser->description;
+            $session['user']->email = $data->userData->getUser->email;
+            $session['user']->emailVerified = $data->userData->getUser->emailVerified;
+            $session['user']->employmentArea = $data->userData->getUser->employmentArea;
+            $session['user']->fullName = $data->userData->getUser->fullName;
+            $session['user']->habeasData = $data->userData->getUser->habeasData;
+            $session['user']->identification = $data->userData->getUser->identification;
             //$session['user']->name              = $data->userData->getUser->name;
-            $session['user']->nameFirst         = $data->userData->getUser->nameFirst;
-            $session['user']->nameLast          = $data->userData->getUser->nameLast;
-            $session['user']->onesignalUser     = $data->userData->getUser->onesignalUser;
-            $session['user']->password          = $this->password;
-            $session['user']->phone             = $data->userData->getUser->phone;
+            $session['user']->nameFirst = $data->userData->getUser->nameFirst;
+            $session['user']->nameLast = $data->userData->getUser->nameLast;
+            $session['user']->onesignalUser = $data->userData->getUser->onesignalUser;
+            $session['user']->password = $this->password;
+            $session['user']->phone = $data->userData->getUser->phone;
             //$session['user']->pointSales        = $data->userData->getUser->pointSales;
             //$session['user']->roles             = $data->userData->getUser->roles;
-            $session['user']->status            = $data->userData->getUser->status;
-            $session['user']->tags              = $data->userData->getUser->tags;
-            $session['user']->token             = $data->userData->getUser->token;
-            $session['user']->updatedAt         = $data->userData->getUser->updatedAt;
-            $session['user']->userAddress       = $data->userData->getUser->address;
+            $session['user']->status = $data->userData->getUser->status;
+            $session['user']->tags = $data->userData->getUser->tags;
+            $session['user']->token = $data->userData->getUser->token;
+            $session['user']->updatedAt = $data->userData->getUser->updatedAt;
+            $session['user']->userAddress = $data->userData->getUser->address;
 
-            //}
-
-            $response = $data;
-
-        }else{
+            $response = true;
+        } else {
             // HA OCURRIDO UN ERROR
             $response = $data;
         }
@@ -114,5 +107,4 @@ class LoginForm extends Model
         return $response;
     }
 
-    
 }

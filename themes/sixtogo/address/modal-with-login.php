@@ -21,6 +21,10 @@ use app\widgets\map\Map;
 use app\widgets\modal\Modal;
 use kartik\form\ActiveForm;
 use bookin\aws\checkbox\AwesomeCheckbox;
+
+/**
+ * @var $modelAddress app\models\Address
+ */
 ?>
 <div class="row m-0">
     <div class="col-sm-5 py-15">
@@ -35,7 +39,7 @@ use bookin\aws\checkbox\AwesomeCheckbox;
         <div class="row px-15">
             <div class="col-sm-12 p-0">
                 <?php
-                echo $form->field($model, 'address')
+                echo $form->field($modelAddress, 'address')
                         ->textInput(['maxlength' => 255, 'id' => 'addressGeocode', 'class' => 'addressForm']);
                 ?>
             </div>
@@ -43,13 +47,13 @@ use bookin\aws\checkbox\AwesomeCheckbox;
         <div class="row px-15">
             <div class="col-sm-8 p-0">
                 <?php
-                echo $form->field($model, 'description')
+                echo $form->field($modelAddress, 'description')
                         ->textInput(['maxlength' => 255, 'id' => 'latlngGeocode', 'class' => 'addressForm']);
                 ?>
             </div>
             <div class="col-sm-4 p-0">
                 <?php
-                echo $form->field($model, 'isNewRecord', [
+                echo $form->field($modelAddress, 'isNewRecord', [
                     'labelOptions' => ['class' => 'col-sm-8'],
                     'template' => '{label}<div class="col-sm-4">{input}{error}{hint}</div>'
                 ])->widget(AwesomeCheckbox::classname(), [
