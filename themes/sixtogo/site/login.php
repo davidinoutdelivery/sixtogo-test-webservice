@@ -36,6 +36,8 @@ $this->title = 'Iniciar Sesión';
 
         <?php ActiveForm::end(); ?>
         
+        <?= yii\authclient\widgets\AuthChoice::widget(['baseAuthUrl' => ['site/auth']]) ?>           
+
         <div class="col-12" style="float: left;width: 100%;padding-top: 10px;">
             <p class="gotham-medium">No tienes una cuenta?, <a href="register">Regístrate</a></p>
             <p class="gotham-medium">Has olvidado tu contraseña?, <a href="../account/index">Recuperar Contraseña</a></p>

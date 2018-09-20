@@ -10,6 +10,7 @@ use yii\web\Session;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RegisterForm;
+use app\models\Facebook;
 use app\models\Address;
 use yii\helpers\VarDumper;
 
@@ -30,6 +31,10 @@ class SiteController extends Controller
     public function actions()
     {
         return [
+            'auth' => [ 
+                'class' => 'yii\authclient\AuthAction', 
+                'successCallback' => [$this, 'oAuthSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
@@ -82,6 +87,8 @@ class SiteController extends Controller
 
             if ($response === true) {
                 $this->redirect(['site/index']);
+            }else{
+                $this->redirect(['site/login']);
             }
         } else {
             $model->password = '';
@@ -148,6 +155,21 @@ class SiteController extends Controller
     public function actionPrivacy()
     {
         return $this->renderPartial('privacy');
+    }
+
+    public function oAuthSuccess($client) {
+
+        $facebook = new Facebook;
+
+        $userAttributes = $client->getUserAttributes(); 
+        
+        $facebook->saveResponse($userAttributes);
+
+    } 
+
+    public function actionFacebook()
+    {
+        return $this->render('facebook');
     }
 
 }
