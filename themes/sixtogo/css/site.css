@@ -184,7 +184,19 @@ a.desc:after {
 }
 .mt-5
 {
-    margin: 5px !important;
+    margin-top: 5px !important;
+}
+.mb-5
+{
+    margin-bottom: 5px !important;
+}
+.mt-10
+{
+    margin-top: 10px !important;
+}
+.mb-10
+{
+    margin-bottom: 10px !important;
 }
 .p-0
 {
@@ -332,13 +344,26 @@ a.desc:after {
     margin-top: 10px;
     color: #79797e;
 }
-.navbar-main
+.navbar-brand.image
 {
-    background-color: #f1efef;
+    padding: 10px 15px 5px 5px!important;
 }
-.navbar-main-nav > li
+.navbar-nav .address
 {
-    float: left;
+    padding: 0px !important;
+    width: 100%;
+}
+.navbar-nav .address label.title
+{
+    font-size: 10px;
+    font-family: Gotham-Bold;
+    height: 10px;
+    width: 100%;
+}
+.navbar-nav .address label.address
+{
+    font-size: 12px;
+    font-family: Gotham-Light;
 }
 .search-bar
 {
