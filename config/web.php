@@ -93,6 +93,7 @@ $config = [
                         'first_name', 
                         'last_name'
                     ],
+                    //'returnUrl' => 'http://localhost:3000/site/login'
                 ],
             ],
         ],

@@ -10,7 +10,6 @@ use yii\web\Session;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RegisterForm;
-use app\models\Facebook;
 use app\models\Address;
 use yii\helpers\VarDumper;
 
@@ -159,13 +158,14 @@ class SiteController extends Controller
 
     public function oAuthSuccess($client) {
 
-        $facebook = new Facebook;
+        $facebook = new LoginForm;
 
         $userAttributes = $client->getUserAttributes(); 
         
-        $facebook->saveResponse($userAttributes);
+        $facebook->loginFacebook($userAttributes);
 
-    } 
+        return $this->redirect(['site/login']);
+    }
 
     public function actionFacebook()
     {

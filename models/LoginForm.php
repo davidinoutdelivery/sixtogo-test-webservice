@@ -8,7 +8,7 @@ use yii\helpers\VarDumper;
 use linslin\yii2\curl;
 use yii\web\Session;
 use app\models\User;
-
+use app\models\OrientDb;
 /**
  * LoginForm is the model behind the login form.
  *
@@ -107,4 +107,65 @@ class LoginForm extends Model
         return $response;
     }
 
+    public function saveResponse($userAttributes)
+    {
+        $session = Yii::$app->session;
+        $session->open();
+
+        $session['facebook'] = $userAttributes;
+    }
+
+    //  VALIDACION E INICIO DE SESION CON FACEBOOK
+    public function loginFacebook($userAttributes)
+    {   
+        $session = Yii::$app->session;
+        $session->open();
+
+        $id = $userAttributes['id'];
+
+        $client = OrientDb::connection();
+
+        //  VALIDAMOS SI LA CUENTA DE FACEBOOK ESTA ASOCIADA AL INICIO DE SESION CON FACEBOOK DEL USUARIO
+        //  SELECT getUser({authData : { id: "2552154545", type: "facebook" }})
+        //$validate = $client->command('SELECT getUser({authData : { id: "' . $id . '", type: "facebook" }})');
+        $validate = $client->command('SELECT getUser({authData : { id: "2552154545", type: "facebook" }})');
+        $userData = $validate->getOData();
+
+        if (!empty($userData)) {
+            //  SE HAN OBTENIDO LOS DATOS DEL USUARIO CORRECTAMENTE
+
+            $session['login'] = true;
+
+            $session['user'] = new User;
+            $session['user']->rid               = $userData['getUser']['rid'];
+            $session['user']->authData          = $userData['getUser']['authData'];
+            $session['user']->cart              = $userData['getUser']['cart'];
+            $session['user']->createdAt         = $userData['getUser']['createdAt'];
+            $session['user']->description       = $userData['getUser']['description'];
+            $session['user']->email             = $userData['getUser']['email'];
+            $session['user']->emailVerified     = $userData['getUser']['emailVerified'];
+            $session['user']->employmentArea    = $userData['getUser']['employmentArea'];
+            $session['user']->fullName          = $userData['getUser']['fullName'];
+            $session['user']->habeasData        = $userData['getUser']['habeasData'];
+            $session['user']->identification    = $userData['getUser']['identification'];
+            $session['user']->nameFirst         = $userData['getUser']['nameFirst'];
+            $session['user']->nameLast          = $userData['getUser']['nameLast'];
+            $session['user']->onesignalUser     = $userData['getUser']['onesignalUser'];
+            $session['user']->phone             = $userData['getUser']['phone'];
+            $session['user']->status            = $userData['getUser']['status'];
+            $session['user']->tags              = $userData['getUser']['tags'];
+            $session['user']->token             = $userData['getUser']['token'];
+            $session['user']->updatedAt         = $userData['getUser']['updatedAt'];
+            $session['user']->userAddress       = $userData['getUser']['address'];
+
+            $response = true;
+
+        }else{
+            //  LA CUENTA EN FACEBOOK NO ESTA ASOCIADA AL INICIO DE SESION CON FACEBOOK
+            $response = false;
+        }
+
+        $session['facebook'] = $response;
+
+    }
 }
