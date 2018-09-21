@@ -12,12 +12,14 @@ use app\models\ContactForm;
 use app\models\Address;
 use yii\helpers\VarDumper;
 
-class AddressController extends Controller {
+class AddressController extends Controller
+{
 
     /**
      * {@inheritdoc}
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -42,7 +44,8 @@ class AddressController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function actions() {
+    public function actions()
+    {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -59,11 +62,12 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $model = new Address();
 
         return $this->render('index', [
-                    'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -72,10 +76,13 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionModal() {
+    public function actionModal()
+    {
 
         $session = Yii::$app->session;
         $session->open();
+
+//        $session->destroy();
 
         $modelAddress = new Address();
         if (isset($session['login']) && $session['login'] === true) {
@@ -100,21 +107,29 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionSet() {
+    public function actionSave()
+    {
+        $modelAddress = new Address();
+        $modelAddress->isNewRecord = true;
 
         $session = Yii::$app->session;
         $session->open();
+        if (isset($session['login']) && $session['login'] === true) {
 
-        $post = Yii::$app->request->post('Address');
+            if ($modelAddress->load(Yii::$app->request->post()) &&
+                $modelAddress->validate() &&
+                $modelAddress->save()) {
+                
+            }
+        }
 
-        $session['address'] = isset($post['address']) ? $post['address'] : null;
-        $session['description'] = isset($post['description']) ? $post['description'] : null;
-        $session['latitude'] = isset($post['latitude']) ? $post['latitude'] : null;
-        $session['longitude'] = isset($post['longitude']) ? $post['longitude'] : null;
-        
-//        VarDumper::dump($post,10,true);
-//        VarDumper::dump($session,10,true);
-//        die();
+        $session['address'] = $modelAddress;
+        $session['location'] = json_decode($modelAddress->location, true);
+
+        VarDumper::dump($modelAddress->load(Yii::$app->request->post()), 10, true);
+        VarDumper::dump($modelAddress->validate(), 10, true);
+        die();
+
         $this->redirect(['site/index']);
     }
 
@@ -123,7 +138,8 @@ class AddressController extends Controller {
      *
      * @return Response|string
      */
-    public function actionLogin() {
+    public function actionLogin()
+    {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -135,7 +151,7 @@ class AddressController extends Controller {
 
         $model->password = '';
         return $this->render('login', [
-                    'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -144,7 +160,8 @@ class AddressController extends Controller {
      *
      * @return Response
      */
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -155,7 +172,8 @@ class AddressController extends Controller {
      *
      * @return Response|string
      */
-    public function actionContact() {
+    public function actionContact()
+    {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -163,7 +181,7 @@ class AddressController extends Controller {
             return $this->refresh();
         }
         return $this->render('contact', [
-                    'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -172,7 +190,8 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionAbout() {
+    public function actionAbout()
+    {
         return $this->render('about');
     }
 

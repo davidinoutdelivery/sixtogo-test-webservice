@@ -332,7 +332,7 @@ a.desc:after {
     background-color: #f1efef;
     outline: none !important;
 }
-.btn-circle-xl:active
+.btn-circle-xl-active
 {
     border-width: 3px;
     border-color: #79797e;

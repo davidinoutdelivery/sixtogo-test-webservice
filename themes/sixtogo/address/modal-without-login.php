@@ -18,9 +18,7 @@ use yii\web\View;
 use yii\helpers\Html;
 use yii\helpers\VarDumper;
 use app\widgets\map\Map;
-use app\widgets\modal\Modal;
 use kartik\form\ActiveForm;
-use bookin\aws\checkbox\AwesomeCheckbox;
 
 /**
  * @var $modelAddress app\models\Address
@@ -35,7 +33,7 @@ use bookin\aws\checkbox\AwesomeCheckbox;
         $form = ActiveForm::begin([
                 'id' => 'addressForm',
                 'type' => ActiveForm::TYPE_VERTICAL,
-                'action' => ['address/set']
+                'action' => ['address/save']
         ]);
         ?>
         <div class="row px-15">
@@ -47,6 +45,12 @@ use bookin\aws\checkbox\AwesomeCheckbox;
                         'id' => 'addressGeocode',
                         'class' => 'addressForm'
                 ]);
+                echo $form->field($modelAddress, 'city')
+                    ->hiddenInput(['id' => 'cityGeocode'])
+                    ->label(false);
+                echo $form->field($modelAddress, 'country')
+                    ->hiddenInput(['id' => 'countryGeocode'])
+                    ->label(false);
                 ?>
             </div>
         </div>

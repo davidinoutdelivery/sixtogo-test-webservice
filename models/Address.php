@@ -10,6 +10,7 @@ use yii\base\Model;
  */
 class Address extends Model
 {
+
     public $isNewRecord;
     public $class;
     public $rid;
@@ -17,14 +18,23 @@ class Address extends Model
     public $address;
     public $city;
     public $country;
-    public $createdAt;
     public $default;
     public $description;
     public $name;
     public $status;
-    public $updatedAt;
     public $location;
-    public $data;
+    public $checkCoverage;
+    public $offCoverage;
+    public $saved;
+    public $type;
+    public $updatedAt;
+    public $createdAt;
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->class = $this->className();
+    }
 
     /**
      * @return array the validation rules.
@@ -33,6 +43,7 @@ class Address extends Model
     {
         return [
             [['address', 'city', 'country', 'location'], 'required'],
+            [['isNewRecord', 'address', 'description', 'name', 'city', 'country'], 'safe'],
             [['address', 'city', 'country'], 'string']
         ];
     }
@@ -43,29 +54,103 @@ class Address extends Model
     public function attributeLabels()
     {
         return [
+            'isNewRecord' => 'Guardar Dirección',
             'address' => 'Escribe tu dirección',
             'description' => 'Datos complementarios',
-            'isNewRecord' => 'Guardar Dirección'
+            'saved' => 'Guardar Dirección'
         ];
     }
 
     /**
-     * Sends an email to the specified email address using the information collected by this model.
-     * @param string $email the target email address
-     * @return bool whether the model passes validation
+     * @inheritdoc
      */
-    public function contact($email)
+    public static function className()
     {
-        if ($this->validate()) {
-            Yii::$app->mailer->compose()
-                ->setTo($email)
-                ->setFrom([$this->email => $this->name])
-                ->setSubject($this->subject)
-                ->setTextBody($this->body)
-                ->send();
+        return 'userAddress';
+    }
+
+    /**
+     * add or update row
+     * @return boolean
+     */
+    public function save()
+    {
+        try {
+            $client = OrientDb::connection();
+
+            if ($this->isNewRecord) {
+                $dateCreated = date_create(date('Y-m-d H:i:s'));
+            } else {
+                $dateCreated = date_create(date($this->createdAt));
+                $dateUpdated = date_create(date('Y-m-d H:i:s'));
+            }
+
+            if ($this->location) {
+                $location = json_decode($this->location);
+                $this->location = ( new Record())->setOData([
+                        'coordinates' => [
+                            $location['lng'], $location['lat']
+                        ]
+                    ])->setOClass('OPoint');
+            }
+
+            $recordContent = [
+                'address' => $this->address,
+                'city' => $this->city,
+                'country' => $this->country,
+                'default' => false,
+                'description' => $this->description,
+                'name' => $this->name,
+                'status' => true,
+                'location' => $this->location,
+                'checkCoverage' => true,
+                'offCoverage' => false,
+                'saved' => true,
+                'createdAt' => $dateCreated
+            ];
+
+            if ($this->isNewRecord) {
+
+                $newRecord = (new Record())
+                    ->setOData($recordContent)
+                    ->setOClass($this->class);
+                $record = $client->recordCreate($newRecord);
+                $this->rid = $record->getRid();
+            } else {
+                if ($this->password != "") {
+                    $recordContent['password'] = md5($this->password);
+                }
+                if (is_array($this->pointSales)) {
+                    $recordContent['pointSales'] = $this->pointSales;
+                }
+                if (is_array($this->typeServices)) {
+                    $recordContent['typeServices'] = $this->typeServices;
+                }
+                unset($recordContent['createdAt']);
+                $recordContent['updatedAt'] = date('Y-m-d H:i:s');
+                $queryContent = "UPDATE {$this->rid} MERGE " . Json::encode($recordContent);
+                //echo $queryContent;
+                //return false;
+                //Yii::warning($queryContent);
+                $client->command($queryContent);
+
+                if (is_array($this->pointSales)) {
+                    $removeDrivers = "UPDATE PointSale remove drivers = {$this->rid}";
+                    Yii::beginProfile($removeDrivers, 'yii\db\Command::query');
+                    $client->command($removeDrivers);
+                    Yii::endProfile($removeDrivers, 'yii\db\Command::query');
+
+                    $insertDrivers = "UPDATE [" . implode(',', $this->pointSales) . "] add drivers = {$this->rid}";
+                    Yii::beginProfile($insertDrivers, 'yii\db\Command::query');
+                    $client->command($insertDrivers);
+                    Yii::endProfile($insertDrivers, 'yii\db\Command::query');
+                }
+            }
 
             return true;
+        } catch (ErrorException $e) {
+            Yii::warning($e);
         }
-        return false;
     }
+
 }
