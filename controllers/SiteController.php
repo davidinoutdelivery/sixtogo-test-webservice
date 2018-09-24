@@ -30,6 +30,10 @@ class SiteController extends Controller
     public function actions()
     {
         return [
+            'auth' => [ 
+                'class' => 'yii\authclient\AuthAction', 
+                'successCallback' => [$this, 'oAuthSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
@@ -82,6 +86,8 @@ class SiteController extends Controller
 
             if ($response === true) {
                 $this->redirect(['site/index']);
+            }else{
+                $this->redirect(['site/login']);
             }
         } else {
             $model->password = '';
@@ -150,4 +156,22 @@ class SiteController extends Controller
         return $this->renderPartial('privacy');
     }
 
+    public function oAuthSuccess($client) {
+
+        $facebook = new LoginForm;
+
+        $userAttributes = $client->getUserAttributes(); 
+        
+        $login = $facebook->loginFacebook($userAttributes);
+
+        if ($login) {
+            $render = ['site/index'];
+        }else{
+            $render = ['site/login'];
+        }
+
+        return $this->redirect($render);
+    }
+
+    
 }
