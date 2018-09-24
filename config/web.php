@@ -78,6 +78,25 @@ $config = [
                 'baseUrl' => '@web/themes/sixtogo',
             ],
         ],
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [ 
+                'facebook' => [ 
+                    'class' => 'yii\authclient\clients\Facebook', 
+                    'authUrl' => 'https://www.facebook.com/dialog/oauth?display=popup', 
+                    'clientId' => '243617953002987', 
+                    'clientSecret' => '6b53df564bf93baca70ddc7ae4959c36', 
+                    'attributeNames' => [
+                        'id',
+                        'name', 
+                        'email', 
+                        'first_name', 
+                        'last_name'
+                    ],
+                    //'returnUrl' => 'http://localhost:3000/site/login'
+                ],
+            ],
+        ],
 //        'assetManager' => [
 //            'bundles' => [
 //                'dosamigos\google\maps\MapAsset' => [

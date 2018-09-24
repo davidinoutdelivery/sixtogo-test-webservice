@@ -38,3 +38,25 @@
 #login-form,#register-form{
     text-align: left;
 }
+.btn-facebook{ 
+    box-sizing: border-box;
+    padding: 0 30px;
+    text-align: center; 
+    color: #fff;
+    font-size: 15px;
+    font-family: 'GothamRoundedBook';
+    background: #4267b2;
+    border: none;
+    transition: 0.4s;
+    height: 42px;
+    width: 100%;
+    line-height: 42px;
+    border-radius: 500px;
+    font-family: Gotham-Medium;
+    float: left;
+    margin-top: 10px;
+    text-decoration: none;
+}
+.btn-facebook:hover{
+    color:#fff;
+}
