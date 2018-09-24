@@ -166,6 +166,6 @@ class LoginForm extends Model
         }
 
         $session['facebook'] = $response;
-
+        return $response;
     }
 }

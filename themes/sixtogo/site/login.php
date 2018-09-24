@@ -54,11 +54,10 @@ if (isset($session['facebook']) && $session['facebook']) {
                 <div class="col-lg-12">
                     <?= Html::submitButton('<i class="fa fa-sign-in-alt"></i> Iniciar sesión', ['class' => 'btn btn-primary btn-login gotham-medium', 'name' => 'login-button']) ?>
                 </div>
-                <div class="col-12">
-                    <?= yii\authclient\widgets\AuthChoice::widget([
-                        'baseAuthUrl' => ['site/auth'],
-                        'popupMode' => false
-                ]) ?>  
+                <div class="col-lg-12">
+                    
+                    <a class="facebook auth-link btn-facebook" href="/site/auth?authclient=facebook" title="Facebook" ><i class="fab fa-facebook"></i> Continuar con Facebook</a>
+                            
                 </div>
             </div>
 

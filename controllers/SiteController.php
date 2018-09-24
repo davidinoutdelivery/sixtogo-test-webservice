@@ -162,14 +162,16 @@ class SiteController extends Controller
 
         $userAttributes = $client->getUserAttributes(); 
         
-        $facebook->loginFacebook($userAttributes);
+        $login = $facebook->loginFacebook($userAttributes);
 
-        return $this->redirect(['site/login']);
+        if ($login) {
+            $render = ['site/index'];
+        }else{
+            $render = ['site/login'];
+        }
+
+        return $this->redirect($render);
     }
 
-    public function actionFacebook()
-    {
-        return $this->render('facebook');
-    }
-
+    
 }
