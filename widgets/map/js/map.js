@@ -53,6 +53,7 @@ function initMap() {
 
     searchBox.addListener('places_changed', function () {
         var places = searchBox.getPlaces();
+        console.log('places1', places);
 
         if (places.length == 0) {
             return;
@@ -77,6 +78,8 @@ function initMap() {
         map.fitBounds(bounds);
     });
 
+    geocodeAddress(geocoder, map, marker);
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             let currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -89,15 +92,17 @@ function initMap() {
     }
 }
 
-function codeAddress(geocoder, map, marker, address) {
-    geocoder.geocode({'address': address}, function (results, status) {
-        if (status === 'OK') {
-            marker.setPosition(results[0].geometry.location);
-            map.panTo(marker.getPosition());
-//            $('#latlngGeocode').val(results[0].geometry.location);
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
+function geocodeAddress(geocoder, map, marker) {
+    $('#addressGeocode').on("address:change", function (event) {
+        let address = $(this).val();
+        geocoder.geocode({'address': address}, function (results, status) {
+            if (status === 'OK') {
+                marker.setPosition(results[0].geometry.location);
+                map.panTo(marker.getPosition());
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
     });
 }
 
@@ -118,10 +123,9 @@ function geocodeLatLng(geocoder, map, marker, location) {
                 latlng.push(location.lat());
                 latlng.push(location.lng());
 
-                $('#locationGeocode').val(JSON.stringify({lat:location.lat(), lng:location.lng()}));
+                $('#locationGeocode').val(JSON.stringify({lat: location.lat(), lng: location.lng()}));
                 marker.setPosition(location);
                 map.panTo(marker.getPosition());
-//                codeAddress(geocoder, map, marker, $('#addressGeocode').val());
             } else {
                 window.alert('No results found');
             }

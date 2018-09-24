@@ -4,6 +4,10 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use PhpOrient\Protocols\Binary\Data\ID;
+use PhpOrient\Protocols\Binary\Data\Record;
+use PhpOrient\Exceptions\PhpOrientException;
+use yii\helpers\VarDumper;
 
 /**
  * ContactForm is the model behind the contact form.
@@ -43,8 +47,9 @@ class Address extends Model
     {
         return [
             [['address', 'city', 'country', 'location'], 'required'],
-            [['isNewRecord', 'address', 'description', 'name', 'city', 'country'], 'safe'],
-            [['address', 'city', 'country'], 'string']
+            [['address', 'description', 'name', 'city', 'country', 'saved'], 'safe'],
+            [['address', 'city', 'country'], 'string'],
+            [['name'], 'validateName', 'skipOnEmpty' => false]
         ];
     }
 
@@ -73,83 +78,93 @@ class Address extends Model
      * add or update row
      * @return boolean
      */
-    public function save()
+    public function save($userRid)
     {
         try {
             $client = OrientDb::connection();
-
-            if ($this->isNewRecord) {
-                $dateCreated = date_create(date('Y-m-d H:i:s'));
-            } else {
-                $dateCreated = date_create(date($this->createdAt));
-                $dateUpdated = date_create(date('Y-m-d H:i:s'));
-            }
-
-            if ($this->location) {
-                $location = json_decode($this->location);
-                $this->location = ( new Record())->setOData([
-                        'coordinates' => [
-                            $location['lng'], $location['lat']
-                        ]
-                    ])->setOClass('OPoint');
-            }
 
             $recordContent = [
                 'address' => $this->address,
                 'city' => $this->city,
                 'country' => $this->country,
-                'default' => false,
+                'defaultAddress' => false,
                 'description' => $this->description,
-                'name' => $this->name,
+                'name' => (empty($this->name) || is_null($this->name)) ? 'unnamed' : $this->name,
                 'status' => true,
-                'location' => $this->location,
+                'location' => json_decode($this->location),
                 'checkCoverage' => true,
-                'offCoverage' => false,
-                'saved' => true,
-                'createdAt' => $dateCreated
+                'saved' => $this->saved,
+                'user' => $userRid
             ];
 
             if ($this->isNewRecord) {
 
-                $newRecord = (new Record())
-                    ->setOData($recordContent)
-                    ->setOClass($this->class);
-                $record = $client->recordCreate($newRecord);
-                $this->rid = $record->getRid();
+                $jsonEncode = json_encode($recordContent, JSON_UNESCAPED_UNICODE);
+
+                $sql = "SELECT createAddress({$jsonEncode});";
+
+                Yii::beginProfile($sql, 'yii\db\Command::query');
+                $data = $client->command($sql);
+                Yii::endProfile($sql, 'yii\db\Command::query');
+
+                $result = $data->getOData();
+
+                $return = false;
+                if ($result['createAddress']) {
+                    $return = json_encode($result['createAddress']);
+                }
             } else {
-                if ($this->password != "") {
-                    $recordContent['password'] = md5($this->password);
-                }
-                if (is_array($this->pointSales)) {
-                    $recordContent['pointSales'] = $this->pointSales;
-                }
-                if (is_array($this->typeServices)) {
-                    $recordContent['typeServices'] = $this->typeServices;
-                }
-                unset($recordContent['createdAt']);
-                $recordContent['updatedAt'] = date('Y-m-d H:i:s');
-                $queryContent = "UPDATE {$this->rid} MERGE " . Json::encode($recordContent);
-                //echo $queryContent;
-                //return false;
-                //Yii::warning($queryContent);
-                $client->command($queryContent);
 
-                if (is_array($this->pointSales)) {
-                    $removeDrivers = "UPDATE PointSale remove drivers = {$this->rid}";
-                    Yii::beginProfile($removeDrivers, 'yii\db\Command::query');
-                    $client->command($removeDrivers);
-                    Yii::endProfile($removeDrivers, 'yii\db\Command::query');
+                echo 'error';
+                die();
 
-                    $insertDrivers = "UPDATE [" . implode(',', $this->pointSales) . "] add drivers = {$this->rid}";
-                    Yii::beginProfile($insertDrivers, 'yii\db\Command::query');
-                    $client->command($insertDrivers);
-                    Yii::endProfile($insertDrivers, 'yii\db\Command::query');
-                }
+//                if ($this->password != "") {
+//                    $recordContent['password'] = md5($this->password);
+//                }
+//                if (is_array($this->pointSales)) {
+//                    $recordContent['pointSales'] = $this->pointSales;
+//                }
+//                if (is_array($this->typeServices)) {
+//                    $recordContent['typeServices'] = $this->typeServices;
+//                }
+//                unset($recordContent['createdAt']);
+//                $recordContent['updatedAt'] = date('Y-m-d H:i:s');
+//                $queryContent = "UPDATE {$this->rid} MERGE " . Json::encode($recordContent);
+//                //echo $queryContent;
+//                //return false;
+//                //Yii::warning($queryContent);
+//                $client->command($queryContent);
+//
+//                if (is_array($this->pointSales)) {
+//                    $removeDrivers = "UPDATE PointSale remove drivers = {$this->rid}";
+//                    Yii::beginProfile($removeDrivers, 'yii\db\Command::query');
+//                    $client->command($removeDrivers);
+//                    Yii::endProfile($removeDrivers, 'yii\db\Command::query');
+//
+//                    $insertDrivers = "UPDATE [" . implode(',', $this->pointSales) . "] add drivers = {$this->rid}";
+//                    Yii::beginProfile($insertDrivers, 'yii\db\Command::query');
+//                    $client->command($insertDrivers);
+//                    Yii::endProfile($insertDrivers, 'yii\db\Command::query');
+//                }
             }
 
-            return true;
+            return $return;
         } catch (ErrorException $e) {
             Yii::warning($e);
+        }
+    }
+
+    /**
+     * @param string $attribute the attribute currently being validated
+     * @param mixed $params the value of the "params" given in the rule
+     * @param \yii\validators\InlineValidator $validator related InlineValidator instance.
+     * This parameter is available since version 2.0.11.
+     */
+    public function validateName($attribute, $params, $validator)
+    {
+        if ($this->saved == 1 && empty($this->$attribute)) {
+
+            $validator->addError($this, $attribute, 'Debe elegir un nombre para guardar la dirección.');
         }
     }
 

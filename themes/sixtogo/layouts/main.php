@@ -16,7 +16,8 @@ $asset = new ThemeAsset();
 $session = Yii::$app->session;
 //$session->open();
 if (isset($session['address'])) {
-    $address = $session['address'];
+    $address = $session['address']->address;
+//    $address = 'null';
 } else {
     $address = 'Seleccionar dirección';
 }
