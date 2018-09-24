@@ -127,8 +127,8 @@ class LoginForm extends Model
 
         //  VALIDAMOS SI LA CUENTA DE FACEBOOK ESTA ASOCIADA AL INICIO DE SESION CON FACEBOOK DEL USUARIO
         //  SELECT getUser({authData : { id: "2552154545", type: "facebook" }})
-        //$validate = $client->command('SELECT getUser({authData : { id: "' . $id . '", type: "facebook" }})');
-        $validate = $client->command('SELECT getUser({authData : { id: "2552154545", type: "facebook" }})');
+        $validate = $client->command('SELECT getUser({authData : { id: "' . $id . '", type: "facebook" }})');
+        //$validate = $client->command('SELECT getUser({authData : { id: "2552154545", type: "facebook" }})');
         $userData = $validate->getOData();
 
         if (!empty($userData)) {
@@ -137,26 +137,26 @@ class LoginForm extends Model
             $session['login'] = true;
 
             $session['user'] = new User;
-            $session['user']->rid               = $userData['getUser']['rid'];
-            $session['user']->authData          = $userData['getUser']['authData'];
-            $session['user']->cart              = $userData['getUser']['cart'];
-            $session['user']->createdAt         = $userData['getUser']['createdAt'];
-            $session['user']->description       = $userData['getUser']['description'];
-            $session['user']->email             = $userData['getUser']['email'];
-            $session['user']->emailVerified     = $userData['getUser']['emailVerified'];
-            $session['user']->employmentArea    = $userData['getUser']['employmentArea'];
-            $session['user']->fullName          = $userData['getUser']['fullName'];
-            $session['user']->habeasData        = $userData['getUser']['habeasData'];
-            $session['user']->identification    = $userData['getUser']['identification'];
-            $session['user']->nameFirst         = $userData['getUser']['nameFirst'];
-            $session['user']->nameLast          = $userData['getUser']['nameLast'];
-            $session['user']->onesignalUser     = $userData['getUser']['onesignalUser'];
-            $session['user']->phone             = $userData['getUser']['phone'];
-            $session['user']->status            = $userData['getUser']['status'];
-            $session['user']->tags              = $userData['getUser']['tags'];
-            $session['user']->token             = $userData['getUser']['token'];
-            $session['user']->updatedAt         = $userData['getUser']['updatedAt'];
-            $session['user']->userAddress       = $userData['getUser']['address'];
+            $session['user']->rid            = "#".$userData['getUser']['rid']->cluster.":".$userData['getUser']['rid']->position;
+            $session['user']->authData       = $userData['getUser']['authData'];
+            $session['user']->cart           = $userData['getUser']['cart'];
+            $session['user']->createdAt      = $userData['getUser']['createdAt'];
+            $session['user']->description    = $userData['getUser']['description'];
+            $session['user']->email          = $userData['getUser']['email'];
+            $session['user']->emailVerified  = $userData['getUser']['emailVerified'];
+            $session['user']->employmentArea = $userData['getUser']['employmentArea'];
+            $session['user']->fullName       = $userData['getUser']['fullName'];
+            $session['user']->habeasData     = $userData['getUser']['habeasData'];
+            $session['user']->identification = $userData['getUser']['identification'];
+            $session['user']->nameFirst      = $userData['getUser']['nameFirst'];
+            $session['user']->nameLast       = $userData['getUser']['nameLast'];
+            $session['user']->onesignalUser  = $userData['getUser']['onesignalUser'];
+            $session['user']->phone          = $userData['getUser']['phone'];
+            $session['user']->status         = $userData['getUser']['status'];
+            $session['user']->tags           = $userData['getUser']['tags'];
+            $session['user']->token          = $userData['getUser']['token'];
+            $session['user']->updatedAt      = $userData['getUser']['updatedAt'];
+            $session['user']->userAddress    = $userData['getUser']['address'];
 
             $response = true;
 
