@@ -132,6 +132,30 @@ class AccountController extends Controller {
         return $this->redirect(['account/profile']);
     }
 
+    public function actionOrders()
+    {
+        $model = new Account;
+
+        $session = Yii::$app->session;
+        $session->open();
+
+        if (isset($session['user']) && $session['login']) {
+            
+            //  LISTA DE ESTADOS DE ORDENES
+            $estados = $model->stateList();
+
+            //  LISTA TOTAL DE ORDENES DEL USUARIO
+            $orders  = $model->orderList($session['user']->rid);
+
+            //  DIRECCIONAMOS A LA SECCION DE ORDENES DE USUARIO
+            return $this->render('orders',[ 'estados'   => $estados,
+                                            'orders'    => $orders]);
+        }else{
+            //  EL USUARIO NO HA INICIADO SESION
+            return $this->redirect(['site/login']);
+        }
+    }
+
 }
 
 ?>
