@@ -5,10 +5,26 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\web\Session;
+
 use app\models\Account;
 use app\models\Recovery;
+use app\models\Profile;
 
 class AccountController extends Controller {
+
+    public function actions()
+    {
+        return [
+            'auth' => [ 
+                'class' => 'yii\authclient\AuthAction', 
+                'successCallback' => [$this, 'oAuthSuccess'],
+            ],
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
 
     public function actionIndex() {
         $model = new Account();
@@ -56,6 +72,64 @@ class AccountController extends Controller {
 
             return $this->render('recovery', ['response' => false]);
         }
+    }
+
+    public function actionProfile() {
+        
+        $model = new Profile;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            //  GESTIONAMOS LA ACTUALIZACION DE LA INFORMACION BASICA DEL USUARIO EN SESION
+            $response = $model->updateUser();
+            
+            if ($response) {
+                $render = ['site/index'];
+            }else{
+                $render = ['account/profile'];
+            }
+
+            //return $this->render('response_profile',['response' => $render]);
+            return $this->redirect($render);
+
+        }else{
+
+            $session = Yii::$app->session;
+            $session->open();
+
+            if (isset($session['user']) && $session['login']) {
+                //  DIRECCIONAMOS A LA SECCION DEL PERFIL DE USUARIO
+                return $this->render('profile',['model'=> $model,
+                                                'user' => $session['user']]);
+            }else{
+                //  EL USUARIO NO HA INICIADO SESION
+                return $this->redirect(['site/login']);
+            }
+             
+        }        
+
+    }
+
+    public function oAuthSuccess($client)
+    {
+        $profile = new Profile;
+
+        $session = Yii::$app->session;
+        $session->open();
+
+        $userAttributes = $client->getUserAttributes(); 
+        $token = $client->getAccessToken();
+        $rid = $session['user']->rid;
+
+        $response = $profile->attachSocialAccount($userAttributes,$token,$rid);
+
+        $session['response_facebook'] = $response;        
+
+        /*$session['response_facebook'] = array(  'userAttributes' => $userAttributes,
+                                                'token'          => $token,
+                                                'rid'            => $rid);*/
+
+        return $this->redirect(['account/profile']);
     }
 
 }
