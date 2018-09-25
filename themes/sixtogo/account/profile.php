@@ -9,9 +9,9 @@ $session->open();
 
 $this->title = 'Perfil de Usuario';
 
-echo "<pre>";
-print_r($user);
-echo "</pre>";
+//echo "<pre>";
+//print_r($user);
+//echo "</pre>";
 
 $rid = $user['rid'];
 
@@ -50,7 +50,7 @@ if (isset($session['response_facebook'])) {
 
             <div class="form-group">
                 <div class="col-lg-12">
-                    <?= Html::submitButton('<i class="fa fa-edit"></i> Actualizar', ['class' => 'btn btn-primary btn-login gotham-medium', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('<i class="fa fa-edit"></i> Actualizar', ['class' => 'btn btn-primary btn-update gotham-medium', 'name' => 'login-button']) ?>
                 </div>
             </div>
 

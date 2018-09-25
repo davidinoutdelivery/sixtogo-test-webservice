@@ -5,7 +5,7 @@
     color: #fff;
     font-size: 15px;
     font-family: 'GothamRoundedBook';
-    background: #ff3d2f;
+    background: linear-gradient(to bottom, #c85440, #e93f33);
     border: none;
     transition: 0.4s;
     height: 42px;
@@ -21,7 +21,7 @@
     color: #fff;
     font-size: 15px;
     font-family: 'GothamRoundedBook';
-    background: #ff3d2f;
+    background: linear-gradient(to bottom, #c85440, #e93f33);
     border: none;
     transition: 0.4s;
     height: 42px;
@@ -59,4 +59,24 @@
 }
 .btn-facebook:hover{
     color:#fff;
+}
+
+.btn-update{ 
+    box-sizing: border-box;
+    padding: 0 30px;
+    text-align: center; 
+    color: #fff;
+    font-size: 15px;
+    font-family: 'GothamRoundedBook';
+    background: linear-gradient(to bottom, #81a93c, #5b993c);
+    border: none;
+    transition: 0.4s;
+    height: 42px;
+    width: 100%;
+    line-height: 42px;
+    border-radius: 500px;
+    font-family: Gotham-Medium;
+    float: left;
+    margin-top: 10px;
+    text-decoration: none;
 }
