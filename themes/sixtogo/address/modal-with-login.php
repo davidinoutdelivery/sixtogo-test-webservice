@@ -35,8 +35,9 @@ JSRegister::begin([
 ]);
 ?>
 <script>
-    $('#isSaved').change(function () {
-        if ($('#isSaved').prop('checked')) {
+    $('#isSave').change(function () {
+        $('#isNewRecord').val(1);
+        if ($('#isSave').prop('checked')) {
             if ($('#otherAddress').hasClass('scroll-open')) {
                 $('#otherAddress').removeClass('scroll-open');
                 $('#otherAddress').addClass('scroll-close');
@@ -50,29 +51,37 @@ JSRegister::begin([
             $('#submitButton').addClass('col-sm-12');
         }
         $('.btn-circle-xl').removeClass('btn-circle-xl-active');
+        $('#ridAddress').val(false);
     });
 
     $('.btn-circle-xl').click(function () {
         let name = $(this).data('name');
         $('.btn-circle-xl').removeClass('btn-circle-xl-active');
-        if ($('#isSaved').prop('checked')) {
-            $(this).addClass('btn-circle-xl-active')
+        if ($('#isSave').prop('checked')) {
+            $(this).addClass('btn-circle-xl-active');
             if (name !== 'others') {
                 $('#txtName').val(name);
                 $('#divName').addClass('hidden');
                 $('#submitButton').removeClass('col-sm-4');
                 $('#submitButton').addClass('col-sm-12');
+                $('#ridAddress').val($(this).data('rid'));
+
+                if ($(this).data('rid') != '') {
+                    $('#isNewRecord').val(0);
+                } else {
+                    $('#isNewRecord').val(1);
+                }
             } else {
                 $('#txtName').val('');
                 $('#divName').removeClass('hidden');
                 $('#submitButton').removeClass('col-sm-12');
                 $('#submitButton').addClass('col-sm-4');
+                $('#ridAddress').val(false);
             }
-            $('#ridAddress').val(false);
         } else {
-            if ($(this).data('rid') !== '' && $(this).data('rid') != undefined) {
-                $(this).addClass('btn-circle-xl-active')
-            }
+            $('#isNewRecord').val(0);
+
+            $(this).addClass('btn-circle-xl-active');
             $('#txtName').val(name);
             $('#divName').addClass('hidden');
             $('#submitButton').removeClass('col-sm-4');
@@ -103,6 +112,7 @@ JSRegister::begin([
     });
 
     $('.accordion-item').click(function () {
+        $('#isNewRecord').val(false);
         $(this).find('.otherAddress').prop('checked', true);
         $('#ridAddress').val($(this).data('rid'));
         $('#addressGeocode').val($(this).data('address'));
@@ -113,27 +123,31 @@ JSRegister::begin([
         $('#otherAddress').addClass('scroll-close');
     });
 
+
+
     var scroll = document.getElementById('otherAddress');
-    scroll.addEventListener("webkitAnimationStart", function (e) {
-        if (e.animationName == 'vacordion-right-slide') {
-            $('.accordion-section').css('width', '280px');
-        }
-    });
-    scroll.addEventListener("animationstart", function (e) {
-        if (e.animationName == 'vacordion-right-slide') {
-            $('.accordion-section').css('width', '280px');
-        }
-    });
-    scroll.addEventListener("webkitAnimationEnd", function (e) {
-        if (e.animationName == 'vacordion-left-slide') {
-            $('.accordion-section').css('width', '0px');
-        }
-    });
-    scroll.addEventListener("animationend", function (e) {
-        if (e.animationName == 'vacordion-left-slide') {
-            $('.accordion-section').css('width', '0px');
-        }
-    });
+    if (scroll !== null) {
+        scroll.addEventListener("webkitAnimationStart", function (e) {
+            if (e.animationName == 'vacordion-right-slide') {
+                $('.accordion-section').css('width', '280px');
+            }
+        });
+        scroll.addEventListener("animationstart", function (e) {
+            if (e.animationName == 'vacordion-right-slide') {
+                $('.accordion-section').css('width', '280px');
+            }
+        });
+        scroll.addEventListener("webkitAnimationEnd", function (e) {
+            if (e.animationName == 'vacordion-left-slide') {
+                $('.accordion-section').css('width', '0px');
+            }
+        });
+        scroll.addEventListener("animationend", function (e) {
+            if (e.animationName == 'vacordion-left-slide') {
+                $('.accordion-section').css('width', '0px');
+            }
+        });
+    }
 </script>
 <?php
 JSRegister::end();
@@ -154,6 +168,9 @@ JSRegister::end();
                 <div class="row px-15">
                     <div class="col-sm-12 p-0">
                         <?php
+                        echo $form->field($modelAddress, 'isNewRecord')
+                            ->hiddenInput(['id' => 'isNewRecord'])
+                            ->label(false);
                         echo $form->field($modelAddress, 'rid')
                             ->hiddenInput(['id' => 'ridAddress'])
                             ->label(false);
@@ -188,7 +205,7 @@ JSRegister::end();
                     </div>
                     <div class="col-sm-4 p-0">
                         <?php
-                        echo $form->field($modelAddress, 'saved', [
+                        echo $form->field($modelAddress, 'save', [
                             'labelOptions' => ['class' => 'col-sm-8'],
                             'template' => '{label}<div class="col-sm-4">{input}{error}{hint}</div>'
                         ])->widget(AwesomeCheckbox::classname(), [
@@ -197,7 +214,7 @@ JSRegister::end();
                                 AwesomeCheckbox::STYLE_SUCCESS
                             ],
                             'options' => [
-                                'id' => 'isSaved',
+                                'id' => 'isSave',
                                 'label' => ' '
                             ]
                         ]);

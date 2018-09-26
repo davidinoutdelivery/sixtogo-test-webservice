@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use PhpOrient\Protocols\Binary\Data\ID;
 use PhpOrient\Protocols\Binary\Data\Record;
-use PhpOrient\Exceptions\PhpOrientException;
+use yii\helpers\Json;
 use yii\helpers\VarDumper;
 
 /**
@@ -29,7 +29,7 @@ class Address extends Model
     public $location;
     public $checkCoverage;
     public $offCoverage;
-    public $saved;
+    public $save;
     public $type;
     public $updatedAt;
     public $createdAt;
@@ -47,7 +47,7 @@ class Address extends Model
     {
         return [
             [['address', 'city', 'country', 'location'], 'required'],
-            [['address', 'description', 'name', 'city', 'country', 'saved'], 'safe'],
+            [['isNewRecord', 'rid', 'address', 'description', 'name', 'city', 'country', 'save'], 'safe'],
             [['address', 'city', 'country'], 'string'],
             [['name'], 'validateName', 'skipOnEmpty' => false]
         ];
@@ -62,7 +62,7 @@ class Address extends Model
             'isNewRecord' => 'Guardar Dirección',
             'address' => 'Escribe tu dirección',
             'description' => 'Datos complementarios',
-            'saved' => 'Guardar Dirección'
+            'save' => 'Guardar Dirección'
         ];
     }
 
@@ -93,7 +93,7 @@ class Address extends Model
                 'status' => true,
                 'location' => json_decode($this->location),
                 'checkCoverage' => true,
-                'saved' => $this->saved,
+                'save' => $this->save,
                 'user' => $userRid
             ];
 
@@ -115,37 +115,20 @@ class Address extends Model
                 }
             } else {
 
-                echo 'error';
-                die();
+                $recordContent['updatedAt'] = date('Y-m-d H:i:s');
+                $queryContent = "UPDATE {$this->rid} MERGE " . Json::encode($recordContent);
+                $result['update'] = $client->command($queryContent)->getOData();
 
-//                if ($this->password != "") {
-//                    $recordContent['password'] = md5($this->password);
-//                }
-//                if (is_array($this->pointSales)) {
-//                    $recordContent['pointSales'] = $this->pointSales;
-//                }
-//                if (is_array($this->typeServices)) {
-//                    $recordContent['typeServices'] = $this->typeServices;
-//                }
-//                unset($recordContent['createdAt']);
-//                $recordContent['updatedAt'] = date('Y-m-d H:i:s');
-//                $queryContent = "UPDATE {$this->rid} MERGE " . Json::encode($recordContent);
-//                //echo $queryContent;
-//                //return false;
-//                //Yii::warning($queryContent);
-//                $client->command($queryContent);
-//
-//                if (is_array($this->pointSales)) {
-//                    $removeDrivers = "UPDATE PointSale remove drivers = {$this->rid}";
-//                    Yii::beginProfile($removeDrivers, 'yii\db\Command::query');
-//                    $client->command($removeDrivers);
-//                    Yii::endProfile($removeDrivers, 'yii\db\Command::query');
-//
-//                    $insertDrivers = "UPDATE [" . implode(',', $this->pointSales) . "] add drivers = {$this->rid}";
-//                    Yii::beginProfile($insertDrivers, 'yii\db\Command::query');
-//                    $client->command($insertDrivers);
-//                    Yii::endProfile($insertDrivers, 'yii\db\Command::query');
-//                }
+
+                if ($result['update']['result']) {
+
+                    $queryContent = "SELECT getAddresses({$userRid})";
+                    $result['select'] = $client->command($queryContent)->getOData();
+
+                    $return = $result['select']['getAddresses'] ? json_encode($result['select']['getAddresses']) : false;
+                } else {
+                    $return = false;
+                }
             }
 
             return $return;
@@ -162,7 +145,7 @@ class Address extends Model
      */
     public function validateName($attribute, $params, $validator)
     {
-        if ($this->saved == 1 && empty($this->$attribute)) {
+        if ($this->save == 1 && empty($this->$attribute)) {
 
             $validator->addError($this, $attribute, 'Debe elegir un nombre para guardar la dirección.');
         }

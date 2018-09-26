@@ -85,6 +85,7 @@ class AddressController extends Controller
 //        $session->destroy();
 
         $modelAddress = new Address();
+        $modelAddress->isNewRecord = true;
         if (isset($session['login']) && $session['login'] === true) {
 
             $userAddress = $session['user']['userAddress'];
@@ -121,11 +122,12 @@ class AddressController extends Controller
     public function actionSave()
     {
         $modelAddress = new Address();
-        $modelAddress->isNewRecord = true;
 
         $session = Yii::$app->session;
         $session->open();
-        $modelAddress->load(Yii::$app->request->post());
+//        $modelAddress->load(Yii::$app->request->post());
+//        VarDumper::dump($modelAddress, 10, true);
+//        die();
         if (isset($session['login']) && $session['login'] === true) {
 
             if ($modelAddress->load(Yii::$app->request->post()) &&
