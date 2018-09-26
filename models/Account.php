@@ -39,28 +39,5 @@
 			return $response;
 	    }
 
-	    public function stateList()
-	    {
-	    	//	CONSULTAMOS LA LISTA DE ESTADOS PARA EL FILTRO DE ORDENES
-	    	$client 	= OrientDb::connection();
-	    	$consulta 	= $client->command('SELECT FROM State WHERE active = "true" ORDER BY sortOrder ASC');
-	    	//$listado 	= $consulta->getOData();
-	    	$response 	= json_encode($consulta);
-
-	    	return $response;
-	    }
-
-	    public function orderList($rid)
-	    {
-	    	//	CONSULTAMOS EL LISTADO DE ORDENES DEL USUARIO EN SESION
-	    	//	select expand(getOrderByUser({user : #28:55}))
-			$client 	= OrientDb::connection();
-			//$orders 	= $client->command('select expand(getOrderByUser({user : "' . $rid . '"}))');
-			$orders 	= $client->command('select expand(getOrderByUser({user : "#28:55"}))');
-			$response 	= json_encode($orders);
-
-			return $response;
-	    }
-
 	}
 ?>

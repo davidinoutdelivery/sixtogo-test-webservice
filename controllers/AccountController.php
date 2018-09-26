@@ -10,6 +10,7 @@ use yii\web\Session;
 use app\models\Account;
 use app\models\Recovery;
 use app\models\Profile;
+use app\models\Orders;
 
 class AccountController extends Controller {
 
@@ -134,26 +135,54 @@ class AccountController extends Controller {
 
     public function actionOrders()
     {
-        $model = new Account;
+        $model = new Orders;
 
         $session = Yii::$app->session;
         $session->open();
 
+        //  EVALUAMOS QUE SI EL USUARIO HA INICIADO SESION
         if (isset($session['user']) && $session['login']) {
-            
+
             //  LISTA DE ESTADOS DE ORDENES
-            $estados = $model->stateList();
+            $states = $model->stateList();
 
-            //  LISTA TOTAL DE ORDENES DEL USUARIO
-            $orders  = $model->orderList($session['user']->rid);
+            if (Yii::$app->request->get()) {
 
-            //  DIRECCIONAMOS A LA SECCION DE ORDENES DE USUARIO
-            return $this->render('orders',[ 'estados'   => $estados,
-                                            'orders'    => $orders]);
+                //  GUARDAMOS LAS VARIABLES CAPTURADAS DE LA URL
+                $get = Yii::$app->request->get();
+                
+                //  CONSULTAMOS LAS ORDENES DEL USUARIO USUANDO EL FILTRO
+                $orders  = $model->orderList($session['user']->rid,$get);
+
+                //  DIRECCIONAMOS A LA SECCION DE ORDENES DE USUARIO
+                return $this->render('orders',[ 'states'  => $states,
+                                                'orders'  => $orders,
+                                                'get'     => $get]);
+
+            }else{
+
+                $session['orders'] = new Orders;
+
+                //  LISTA TOTAL DE ORDENES DEL USUARIO
+                $orders  = $model->orderList($session['user']->rid);
+
+                $modalDetails     = Yii::$app->runAction('account/details',['details' => $orders]);
+
+                //  RENDERIZAMOS LA SECCION DE ORDENES DE USUARIO
+                return $this->render('orders',[ 'states'   => $states,
+                                                'orders'    => $orders/*,
+                                                'modalDetails'    => $modalDetails*/]);    
+            }
+            
         }else{
             //  EL USUARIO NO HA INICIADO SESION
             return $this->redirect(['site/login']);
         }
+    }
+
+    public function actionDetails($details)
+    {
+        return $this->renderPartial('details',['details' => $details]);
     }
 
 }
