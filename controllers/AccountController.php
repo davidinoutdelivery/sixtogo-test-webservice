@@ -166,23 +166,15 @@ class AccountController extends Controller {
                 //  LISTA TOTAL DE ORDENES DEL USUARIO
                 $orders  = $model->orderList($session['user']->rid);
 
-                $modalDetails     = Yii::$app->runAction('account/details',['details' => $orders]);
-
                 //  RENDERIZAMOS LA SECCION DE ORDENES DE USUARIO
                 return $this->render('orders',[ 'states'   => $states,
-                                                'orders'    => $orders/*,
-                                                'modalDetails'    => $modalDetails*/]);    
+                                                'orders'    => $orders]);    
             }
             
         }else{
             //  EL USUARIO NO HA INICIADO SESION
             return $this->redirect(['site/login']);
         }
-    }
-
-    public function actionDetails($details)
-    {
-        return $this->renderPartial('details',['details' => $details]);
     }
 
 }
