@@ -46,7 +46,8 @@ Modal::begin([
     'size' => 'modal-lg',
     'clientOptions' => [
         'show' => $modalRender['render']
-    ]
+    ],
+    'toggleButtonList' => ['navBarAddress']
 ]);
 
 echo $modalRender['modal'];

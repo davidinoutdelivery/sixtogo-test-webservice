@@ -12,6 +12,15 @@ use app\assets\ThemeAsset;
 
 $themeAsset = ThemeAsset::register($this);
 $asset = new ThemeAsset();
+
+$session = Yii::$app->session;
+//$session->open();
+if (isset($session['address'])) {
+    $address = $session['address']->address;
+//    $address = 'null';
+} else {
+    $address = 'Seleccionar dirección';
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -21,6 +30,7 @@ $asset = new ThemeAsset();
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
+        <link rel="shortcut icon" href="<?= $themeAsset->baseUrl ?>/img/favicon.png" type="image/x-icon" />
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
         <!--FONT-AWESOME-->
@@ -30,86 +40,66 @@ $asset = new ThemeAsset();
         <?php $this->beginBody() ?>
 
         <div class="wrap">
-            <?php
-            NavBar::begin([
-                'brandLabel' => Html::beginTag('div', [
-                    'class' => 'row'
-                ]) .
-                Html::beginTag('a', [
-                    'href' => '/'
-                ]) .
-                Html::img($themeAsset->baseUrl . '/img/header_logo.png', [
-                    'alt' => Yii::$app->name
-                ]) .
-                Html::endTag('a') .
-                Html::beginTag('a', [
-                    'href' => '/'
-                ]) .
-                Html::tag('span', '', [
-                    'class' => 'glyphicon glyphicon-map-marker',
-                    'aria-hidden' => true
-                ]) .
-                Html::endTag('a') .
-                Html::endTag('div'),
-                'brandOptions' => [
-                    'style' => 'height: auto; padding: 5px 15px;'
-                ],
-                'brandUrl' => 'javascript:void(0)',
-                'options' => [
-                    'class' => 'navbar-main navbar-fixed-top',
-                ],
-                'containerOptions' => [
-                    'class' => 'hola mundo'
-                ]
-            ]);
-            ?>
-            <div class="row m-0">
-                <div class="col-xs-offset-8">
-                    <?php
-                    echo Nav::widget([
-                        'options' => ['class' => 'navbar-main-nav navbar-right'],
-                        'items' => [
-                            [
-                                'label' => Html::tag('span', '', [
-                                    'class' => 'glyphicon glyphicon-map-marker',
-                                    'aria-hidden' => true
-                                ]),
-                                'encode' => false
-                            ]
-                        ],
-                    ]);
-                    ?>
-                </div>
-                <div class="col-xs-offset-8">
-                    <?php
-                    $session = Yii::$app->session;
-                    $session->open();
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand image" href="/">
+                            <img src="<?= $themeAsset->baseUrl ?>/img/brand.png" alt="<?= Yii::$app->name ?>">
+                        </a>
+                    </div>
 
-                    echo Nav::widget([
-                        'options' => ['class' => 'navbar-main-nav navbar-right'],
-                        'items' => [
-                            [
-                                'label' => 'Home',
-                                'url' => ['site/index']
-                            ],
-                            ['label' => 'About', 'url' => ['/site/about']],
-                            ['label' => 'Contact', 'url' => ['/site/contact']],
-                            (isset($session['login']) && $session['login'] === true) ? [
-                                'label' => '<span class="glyphicon glyphicon-off" aria-hidden="true"></span>',
-                                'url' => ['site/logout'],
-                                'encode' => false
-                                ] : [
-                                'label' => 'Login',
-                                'url' => ['site/login']
-                                ]
-                        ],
-                    ]);
-                    ?>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li>
+                                <a id="navBarAddress" class="address" href="javascript:void(0)">
+                                    <div class="row m-0">
+                                        <div class="col-xs-2 navbar-brand">
+                                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="col-xs-10">
+                                            <div class="row">
+                                                <label class="title m-0 mt-5">
+                                                    Entregar en:
+                                                </label>
+                                                <label class="address m-0 mb-10">
+                                                    <?= $address ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <?php
+                                if (isset($session['login']) && $session['login'] === true) :
+                                    ?>
+                                    <a href="site/logout">
+                                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                    </a>
+                                    <?php
+                                else :
+                                    ?>
+                                    <a href="site/login">
+                                        Login
+                                    </a>
+                                <?php
+                                endif;
+                                ?>
+                            </li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
                 </div>
-            </div>
-            <?php
-            NavBar::end();
-            ?>
+            </nav>
 
             <div class="container">
                 <?=

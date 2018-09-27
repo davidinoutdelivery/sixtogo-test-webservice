@@ -12,12 +12,14 @@ use app\models\ContactForm;
 use app\models\Address;
 use yii\helpers\VarDumper;
 
-class AddressController extends Controller {
+class AddressController extends Controller
+{
 
     /**
      * {@inheritdoc}
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -42,7 +44,8 @@ class AddressController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function actions() {
+    public function actions()
+    {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -59,11 +62,12 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $model = new Address();
 
         return $this->render('index', [
-                    'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -72,16 +76,31 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionModal() {
+    public function actionModal()
+    {
 
         $session = Yii::$app->session;
         $session->open();
 
+//        $session->destroy();
+
         $modelAddress = new Address();
+        $modelAddress->isNewRecord = true;
         if (isset($session['login']) && $session['login'] === true) {
+
+            $userAddress = $session['user']['userAddress'];
+            foreach ($session['user']['userAddress'] as $key => $value) {
+                if ($value->name == 'Casa' || $value->name == 'Oficina' || $value->name == 'Novi@') {
+                    unset($userAddress[$key]);
+                    $userAddress[$value->name] = $value;
+                }
+            }
+            $session['user']['userAddress'] = $userAddress;
+
             $view = 'modal-with-login';
             $models = [
-                'modelAddress' => $modelAddress
+                'modelAddress' => $modelAddress,
+                'userAddress' => $session['user']['userAddress']
             ];
         } else {
             $view = 'modal-without-login';
@@ -100,21 +119,33 @@ class AddressController extends Controller {
      *
      * @return string
      */
-    public function actionSet() {
+    public function actionSave()
+    {
+        $modelAddress = new Address();
 
         $session = Yii::$app->session;
         $session->open();
-
-        $post = Yii::$app->request->post('Address');
-
-        $session['address'] = isset($post['address']) ? $post['address'] : null;
-        $session['description'] = isset($post['description']) ? $post['description'] : null;
-        $session['latitude'] = isset($post['latitude']) ? $post['latitude'] : null;
-        $session['longitude'] = isset($post['longitude']) ? $post['longitude'] : null;
-        
-//        VarDumper::dump($post,10,true);
-//        VarDumper::dump($session,10,true);
+//        $modelAddress->load(Yii::$app->request->post());
+//        VarDumper::dump($modelAddress, 10, true);
 //        die();
+        if (isset($session['login']) && $session['login'] === true) {
+
+            if ($modelAddress->load(Yii::$app->request->post()) &&
+                $modelAddress->validate() &&
+                $save = $modelAddress->save($session['user']->rid)) {
+
+                $session['user']['userAddress'] = json_decode($save);
+                $session['address'] = $modelAddress;
+            }
+        } else {
+            $session['address'] = $modelAddress;
+        }
+
+//        VarDumper::dump($session['address'], 10, true);
+//        VarDumper::dump($modelAddress->validate(), 10, true);
+//        VarDumper::dump($modelAddress, 10, true);
+//        die();
+
         $this->redirect(['site/index']);
     }
 
@@ -123,7 +154,8 @@ class AddressController extends Controller {
      *
      * @return Response|string
      */
-    public function actionLogin() {
+    public function actionLogin()
+    {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -135,45 +167,8 @@ class AddressController extends Controller {
 
         $model->password = '';
         return $this->render('login', [
-                    'model' => $model,
+                'model' => $model,
         ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout() {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact() {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-                    'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout() {
-        return $this->render('about');
     }
 
 }
