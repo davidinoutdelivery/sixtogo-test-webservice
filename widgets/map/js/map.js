@@ -44,11 +44,6 @@ function initMap() {
         geocodeLatLng(geocoder, map, marker, newLocation);
     });
 
-    map.addListener('click', function (event) {
-        let newLocation = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
-        geocodeLatLng(geocoder, map, marker, newLocation);
-    });
-    
     let input = document.getElementById('addressGeocode');
     let searchBox = new google.maps.places.SearchBox(input);
 
@@ -58,6 +53,7 @@ function initMap() {
 
     searchBox.addListener('places_changed', function () {
         var places = searchBox.getPlaces();
+        console.log('places1', places);
 
         if (places.length == 0) {
             return;
@@ -82,6 +78,8 @@ function initMap() {
         map.fitBounds(bounds);
     });
 
+    geocodeAddress(geocoder, map, marker);
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             let currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -94,15 +92,17 @@ function initMap() {
     }
 }
 
-function codeAddress(geocoder, map, marker, address) {
-    geocoder.geocode({'address': address}, function (results, status) {
-        if (status === 'OK') {
-            marker.setPosition(results[0].geometry.location);
-            map.panTo(marker.getPosition());
-//            $('#latlngGeocode').val(results[0].geometry.location);
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
+function geocodeAddress(geocoder, map, marker) {
+    $('#addressGeocode').on("address:change", function (event) {
+        let address = $(this).val();
+        geocoder.geocode({'address': address}, function (results, status) {
+            if (status === 'OK') {
+                marker.setPosition(results[0].geometry.location);
+                map.panTo(marker.getPosition());
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
     });
 }
 
@@ -110,10 +110,22 @@ function geocodeLatLng(geocoder, map, marker, location) {
     geocoder.geocode({'location': location}, function (results, status) {
         if (status === 'OK') {
             if (results[0]) {
+                $.map(results[0].address_components, function (item) {
+                    if (item.types.indexOf('locality') != -1) {
+                        $('#cityGeocode').val(item.long_name);
+                    }
+                    if (item.types.indexOf('country') != -1) {
+                        $('#countryGeocode').val(item.long_name);
+                    }
+                });
                 $('#addressGeocode').val(results[0].formatted_address);
+                var latlng = [];
+                latlng.push(location.lat());
+                latlng.push(location.lng());
+
+                $('#locationGeocode').val(JSON.stringify({lat: location.lat(), lng: location.lng()}));
                 marker.setPosition(location);
                 map.panTo(marker.getPosition());
-//                codeAddress(geocoder, map, marker, $('#addressGeocode').val());
             } else {
                 window.alert('No results found');
             }

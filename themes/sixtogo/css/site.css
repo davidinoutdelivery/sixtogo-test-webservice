@@ -184,7 +184,19 @@ a.desc:after {
 }
 .mt-5
 {
-    margin: 5px !important;
+    margin-top: 5px !important;
+}
+.mb-5
+{
+    margin-bottom: 5px !important;
+}
+.mt-10
+{
+    margin-top: 10px !important;
+}
+.mb-10
+{
+    margin-bottom: 10px !important;
 }
 .p-0
 {
@@ -320,7 +332,7 @@ a.desc:after {
     background-color: #f1efef;
     outline: none !important;
 }
-.btn-circle-xl:active
+.btn-circle-xl-active
 {
     border-width: 3px;
     border-color: #79797e;
@@ -332,13 +344,26 @@ a.desc:after {
     margin-top: 10px;
     color: #79797e;
 }
-.navbar-main
+.navbar-brand.image
 {
-    background-color: #f1efef;
+    padding: 10px 15px 5px 5px!important;
 }
-.navbar-main-nav > li
+.navbar-nav .address
 {
-    float: left;
+    padding: 0px !important;
+    width: 100%;
+}
+.navbar-nav .address label.title
+{
+    font-size: 10px;
+    font-family: Gotham-Bold;
+    height: 10px;
+    width: 100%;
+}
+.navbar-nav .address label.address
+{
+    font-size: 12px;
+    font-family: Gotham-Light;
 }
 .search-bar
 {
@@ -349,4 +374,116 @@ a.desc:after {
     width: 100%;
     border: 1px solid #f1efef;
     padding: 2px 15px;
+}
+.accordion-section 
+{
+    height: 450px;
+    width: 0px;
+    position: absolute;
+    top: 0%;
+    left: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+@keyframes vacordion-right-slide {
+    from 
+    {
+        left: -120%;
+    }
+    to 
+    {
+        left: 0%;
+    }
+}
+@keyframes vacordion-left-slide {
+    from 
+    {
+        left: 0%;
+    }
+    to 
+    {
+        left: -120%;
+    }
+}
+.scroll-open
+{
+    animation-name: vacordion-right-slide;
+    animation-duration: 0.5s;    
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+.scroll-close
+{
+    animation-name: vacordion-left-slide;
+    animation-duration: 0.5s;    
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+.accordion-item 
+{
+    height: 40px;
+    background-color: #fff;
+    margin: 0 5px 0 5px !important;
+    border-bottom: 1px solid #f1efef;
+}
+.accordion-item:first-child 
+{
+    height: 40px;
+    border-radius: 10px 10px 0 0;
+    margin: 5px 5px 0 5px !important;
+    border-bottom: 1px solid #f1efef;
+}
+.accordion-item:last-child
+{
+    height: 40px;
+    border-radius: 0 0 10px 10px;
+    margin: 0 5px 5px 5px !important;
+}
+.accordion-item .icon
+{
+    height: 100%;
+    color: #79797e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.accordion-item label.title
+{
+    font-size: 15px;
+    font-family: Gotham-Bold;
+    height: 15px;
+    width: 100%;
+}
+.accordion-item label.address
+{
+    font-size: 10px;
+    font-family: Gotham-Light;
+    color: #79797e;
+}
+.scrollbar
+{
+    height: fit-content;
+    max-height: 450px;
+    overflow-y: auto;
+    background-color: #f1efef;
+    position: absolute;
+    left: -120%;
+}
+.scrollbar::-webkit-scrollbar-track 
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #f5f5f5;
+    border-radius: 10px; 
+}
+.scrollbar::-webkit-scrollbar 
+{
+    width: 5px;
+    background-color: #f5f5f5; 
+}
+.scrollbar::-webkit-scrollbar-thumb 
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #ff3547; 
 }

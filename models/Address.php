@@ -4,12 +4,17 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use PhpOrient\Protocols\Binary\Data\ID;
+use PhpOrient\Protocols\Binary\Data\Record;
+use yii\helpers\Json;
+use yii\helpers\VarDumper;
 
 /**
  * ContactForm is the model behind the contact form.
  */
 class Address extends Model
 {
+
     public $isNewRecord;
     public $class;
     public $rid;
@@ -17,14 +22,23 @@ class Address extends Model
     public $address;
     public $city;
     public $country;
-    public $createdAt;
     public $default;
     public $description;
     public $name;
     public $status;
-    public $updatedAt;
     public $location;
-    public $data;
+    public $checkCoverage;
+    public $offCoverage;
+    public $save;
+    public $type;
+    public $updatedAt;
+    public $createdAt;
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->class = $this->className();
+    }
 
     /**
      * @return array the validation rules.
@@ -33,7 +47,9 @@ class Address extends Model
     {
         return [
             [['address', 'city', 'country', 'location'], 'required'],
-            [['address', 'city', 'country'], 'string']
+            [['isNewRecord', 'rid', 'address', 'description', 'name', 'city', 'country', 'save'], 'safe'],
+            [['address', 'city', 'country'], 'string'],
+            [['name'], 'validateName', 'skipOnEmpty' => false]
         ];
     }
 
@@ -43,29 +59,96 @@ class Address extends Model
     public function attributeLabels()
     {
         return [
+            'isNewRecord' => 'Guardar Dirección',
             'address' => 'Escribe tu dirección',
             'description' => 'Datos complementarios',
-            'isNewRecord' => 'Guardar Dirección'
+            'save' => 'Guardar Dirección'
         ];
     }
 
     /**
-     * Sends an email to the specified email address using the information collected by this model.
-     * @param string $email the target email address
-     * @return bool whether the model passes validation
+     * @inheritdoc
      */
-    public function contact($email)
+    public static function className()
     {
-        if ($this->validate()) {
-            Yii::$app->mailer->compose()
-                ->setTo($email)
-                ->setFrom([$this->email => $this->name])
-                ->setSubject($this->subject)
-                ->setTextBody($this->body)
-                ->send();
-
-            return true;
-        }
-        return false;
+        return 'userAddress';
     }
+
+    /**
+     * add or update row
+     * @return boolean
+     */
+    public function save($userRid)
+    {
+        try {
+            $client = OrientDb::connection();
+
+            $recordContent = [
+                'address' => $this->address,
+                'city' => $this->city,
+                'country' => $this->country,
+                'defaultAddress' => false,
+                'description' => $this->description,
+                'name' => (empty($this->name) || is_null($this->name)) ? 'unnamed' : $this->name,
+                'status' => true,
+                'location' => json_decode($this->location),
+                'checkCoverage' => true,
+                'save' => $this->save,
+                'user' => $userRid
+            ];
+
+            if ($this->isNewRecord) {
+
+                $jsonEncode = json_encode($recordContent, JSON_UNESCAPED_UNICODE);
+
+                $sql = "SELECT createAddress({$jsonEncode});";
+
+                Yii::beginProfile($sql, 'yii\db\Command::query');
+                $data = $client->command($sql);
+                Yii::endProfile($sql, 'yii\db\Command::query');
+
+                $result = $data->getOData();
+
+                $return = false;
+                if ($result['createAddress']) {
+                    $return = json_encode($result['createAddress']);
+                }
+            } else {
+
+                $recordContent['updatedAt'] = date('Y-m-d H:i:s');
+                $queryContent = "UPDATE {$this->rid} MERGE " . Json::encode($recordContent);
+                $result['update'] = $client->command($queryContent)->getOData();
+
+
+                if ($result['update']['result']) {
+
+                    $queryContent = "SELECT getAddresses({$userRid})";
+                    $result['select'] = $client->command($queryContent)->getOData();
+
+                    $return = $result['select']['getAddresses'] ? json_encode($result['select']['getAddresses']) : false;
+                } else {
+                    $return = false;
+                }
+            }
+
+            return $return;
+        } catch (ErrorException $e) {
+            Yii::warning($e);
+        }
+    }
+
+    /**
+     * @param string $attribute the attribute currently being validated
+     * @param mixed $params the value of the "params" given in the rule
+     * @param \yii\validators\InlineValidator $validator related InlineValidator instance.
+     * This parameter is available since version 2.0.11.
+     */
+    public function validateName($attribute, $params, $validator)
+    {
+        if ($this->save == 1 && empty($this->$attribute)) {
+
+            $validator->addError($this, $attribute, 'Debe elegir un nombre para guardar la dirección.');
+        }
+    }
+
 }
